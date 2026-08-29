@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Add Case Study &amp; Results | Divya Sanjeevni</title>
+  <meta name="description" content="Publish scientific results, patient statistics, and before &amp; after comparison records.">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/css/admin-styles.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       ADMIN PORTAL SHELL LAYOUT
+       ========================================== -->
+  <div class="app-shell">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" aria-label="Admin Navigation Sidebar">
+      <div class="sidebar-header">
+        <a href="/admin-dashboard.html" class="sidebar-logo">
+          <i data-lucide="leaf" style="color: var(--color-accent); width: 24px; height: 24px;"></i>
+          <span>Divya Sanjeevni</span>
+        </a>
+        <span class="admin-badge">Portal</span>
+      </div>
+
+      <!-- Navigation links -->
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/admin-dashboard.html" class="menu-link">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard Overview</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-product.html" class="menu-link">
+            <i data-lucide="plus-circle"></i>
+            <span>Add Product</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-result.html" class="menu-link active">
+            <i data-lucide="microscope"></i>
+            <span>Add Case Study</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-products.html" class="menu-link">
+            <i data-lucide="package"></i>
+            <span>Manage Products</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-results.html" class="menu-link">
+            <i data-lucide="clipboard-list"></i>
+            <span>Manage Results</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-categories.html" class="menu-link">
+            <i data-lucide="tags"></i>
+            <span>Manage Categories</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-contact-enquiries.html" class="menu-link">
+            <i data-lucide="message-square"></i>
+            <span>Contact Enquiries</span>
+            <span class="menu-badge" id="contact-enquiries-badge" style="{% if pending_enquiries_count == 0 %}display: none;{% endif %}">{{ pending_enquiries_count }}</span>
+          </a>
+        </li>
+        <li style="margin-top: auto; padding-top: 1rem;">
+          <a href="/" target="_blank" class="menu-link" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent);">
+            <i data-lucide="external-link"></i>
+            <span>View Live Website</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar footer -->
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div class="admin-info">
+            <h4>Admin User</h4>
+            <p>Superuser</p>
+          </div>
+        </div>
+        <a href="{% url 'admin_logout' %}" class="logout-btn" aria-label="Log out account" style="display: inline-flex; align-items: center; justify-content: center;">
+          <i data-lucide="log-out"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- RIGHT SIDE WORKSPACE -->
+    <main class="main-workspace">
+      
+      <!-- Top header bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" aria-label="Toggle Sidebar Menu" aria-expanded="true">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search case studies..." aria-label="Search">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="time-indicator">
+            <i data-lucide="calendar"></i>
+            <span>Loading Calendar...</span>
+          </div>
+
+          <div class="header-actions">
+            <button class="header-btn" aria-label="View notifications">
+              <i data-lucide="bell"></i>
+              <span class="header-badge"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Django add-result content block:
+           {% block result_form_content %} -->
+      <div class="content-body">
+        
+        <!-- Header title -->
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Add Clinical Case Study</h2>
+            <p>Publish patient trial outcomes and visual proof records verifying product efficacy.</p>
+          </div>
+          <a href="/admin-dashboard.html" class="btn btn-outline">
+            <i data-lucide="arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Form Element configured for Django REST submissions -->
+        <form id="admin-result-form" method="POST" action="/api/results/add/" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          
+          <div class="form-status-alert"></div>
+
+          <div class="form-split-grid">
+            
+            <!-- LEFT MAIN PANEL (Subject details, written logs, associations) -->
+            <div>
+              
+              <!-- Card 1: Subject details -->
+              <div class="form-card">
+                <h3 class="form-card-title">Subject Demographics</h3>
+
+                <!-- Name identifier -->
+                <div class="form-group">
+                  <label for="subject-name" class="form-label">Subject Identifier / Name *</label>
+                  <input type="text" id="subject-name" name="patient_name" class="form-control" placeholder="e.g. Sarah L. / Subject 14" required>
+                  <span class="form-feedback"></span>
+                </div>
+
+                <div class="form-row-2" style="margin-top: 1.25rem;">
+                  <!-- Age group -->
+                  <div class="form-group">
+                    <label for="subject-age" class="form-label">Age Group (or Specific Age)</label>
+                    <input type="number" id="subject-age" name="age" class="form-control" placeholder="e.g. 29">
+                    <span class="form-feedback"></span>
+                  </div>
+
+                  <!-- Condition treated -->
+                  <div class="form-group">
+                    <label for="subject-condition" class="form-label">Condition Treated *</label>
+                    <input type="text" id="subject-condition" name="condition_treated" class="form-control" placeholder="e.g. Eczema / Digestive Bloating" required>
+                    <span class="form-feedback"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: Treatment Metrics -->
+              <div class="form-card">
+                <h3 class="form-card-title">Trial Efficacy Indicators</h3>
+
+                <div class="form-row-2">
+                  <!-- Improvement percentage -->
+                  <div class="form-group">
+                    <label for="efficacy-percentage" class="form-label">Efficacy / Improvement Percentage (%) *</label>
+                    <input type="number" id="efficacy-percentage" name="improvement_percentage" class="form-control" placeholder="e.g. 94" required>
+                    <span class="form-feedback"></span>
+                  </div>
+
+                  <!-- Duration of use -->
+                  <div class="form-group">
+                    <label for="efficacy-duration" class="form-label">Duration of Treatment (Weeks) *</label>
+                    <input type="number" id="efficacy-duration" name="duration_weeks" class="form-control" placeholder="e.g. 4" required>
+                    <span class="form-feedback"></span>
+                  </div>
+                </div>
+
+                <div style="margin-top: 1.25rem;">
+                  <!-- Associated Product links -->
+                  <div class="form-group">
+                    <label for="associated-product" class="form-label">Associated Product Used *</label>
+                    <select id="associated-product" name="associated_product" class="form-control" required style="-webkit-appearance: none; -moz-appearance: none; appearance: none;">
+                      <option value="">Select Linked Catalog Item</option>
+                      {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.title }}</option>
+                      {% endfor %}
+                    </select>
+                    <span class="form-feedback"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: written notes -->
+              <div class="form-card">
+                <h3 class="form-card-title">Written Review &amp; Clinical Notes</h3>
+
+                <!-- Testimonial -->
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                  <label for="subject-testimonial" class="form-label">Patient Testimonial Quote *</label>
+                  <textarea id="subject-testimonial" name="testimonial" class="form-control" rows="4" placeholder="Enter the user's direct quote describing their treatment experience..." required style="resize: vertical;"></textarea>
+                  <span class="form-feedback"></span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- RIGHT SIDE PANEL (Before & After Media Upload Boxes) -->
+            <div>
+              
+              <!-- Card 4: Before Image -->
+              <div class="form-card">
+                <h3 class="form-card-title">Before Treatment Media</h3>
+                
+                <div class="form-group">
+                  <div class="upload-dropzone" role="button" aria-label="Upload before treatment image file">
+                    <i data-lucide="image" class="upload-icon" style="width: 28px; height: 28px;"></i>
+                    <p>Drop file here, or <strong>browse</strong></p>
+                    <input type="file" id="before-image-file" name="before_image" accept="image/*" style="display: none;">
+                  </div>
+                  <div class="preview-container">
+                    <img src="" alt="Before image preview">
+                    <button class="remove-preview-btn" aria-label="Remove image">&times;</button>
+                  </div>
+                  <span class="form-feedback" style="display: block;"></span>
+                </div>
+              </div>
+
+              <!-- Card 5: After Image -->
+              <div class="form-card">
+                <h3 class="form-card-title">After Treatment Media</h3>
+                
+                <div class="form-group">
+                  <div class="upload-dropzone" role="button" aria-label="Upload after treatment image file">
+                    <i data-lucide="image" class="upload-icon" style="width: 28px; height: 28px;"></i>
+                    <p>Drop file here, or <strong>browse</strong></p>
+                    <input type="file" id="after-image-file" name="after_image" accept="image/*" style="display: none;">
+                  </div>
+                  <div class="preview-container">
+                    <img src="" alt="After image preview">
+                    <button class="remove-preview-btn" aria-label="Remove image">&times;</button>
+                  </div>
+                  <span class="form-feedback" style="display: block;"></span>
+                </div>
+              </div>
+
+              <!-- Card: Video Evidence (Requirement 1) -->
+              <div class="form-card">
+                <h3 class="form-card-title">Video Review Evidence</h3>
+                
+                <!-- Video File Upload drag-and-drop -->
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label">Upload Video Review (MP4/WebM)</label>
+                  <div class="upload-dropzone video-dropzone" role="button" aria-label="Upload video review file">
+                    <i data-lucide="video" class="upload-icon" style="width: 28px; height: 28px;"></i>
+                    <p>Drop video here, or <strong>browse</strong></p>
+                    <input type="file" id="video-file-input" name="video_file" accept="video/mp4,video/webm" style="display: none;">
+                  </div>
+                  <div class="preview-container video-preview-container" style="display: none; position: relative; margin-top: 0.75rem;">
+                    <video src="" controls style="width: 100%; max-height: 180px; border-radius: var(--radius-sm); margin-bottom: 0.5rem;"></video>
+                    <button class="remove-preview-btn remove-video-preview" aria-label="Remove video" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">&times;</button>
+                  </div>
+                  <span class="form-feedback" style="display: block;"></span>
+                </div>
+
+                <!-- Video URL Input -->
+                <div class="form-group">
+                  <label for="video-url" class="form-label">Video Embed URL (YouTube/Vimeo)</label>
+                  <input type="url" id="video-url" name="video_url" class="form-control" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ">
+                  <span class="form-feedback"></span>
+                  <div class="url-video-preview" style="margin-top: 0.75rem; display: none;">
+                    <iframe src="" frameborder="0" allowfullscreen style="width: 100%; height: 180px; border-radius: var(--radius-sm);"></iframe>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 6: Visibility status -->
+              <div class="form-card">
+                <h3 class="form-card-title">Visibility Control</h3>
+                
+                <!-- Toggle publication status -->
+                <div class="switch-group" style="margin-bottom: 0;">
+                  <div class="switch-label-block">
+                    <h4>Publish Case Study</h4>
+                    <p>Show in clinical proofs page.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="is_published" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- STICKY BOTTOM SUBMIT ACTIONS BAR -->
+          <div class="sticky-submit-bar">
+            <button type="button" class="btn btn-outline" onclick="alert('Case study saved as draft.');">Save as Draft</button>
+            <button type="submit" class="btn btn-primary">
+              <i data-lucide="check-circle-2" style="width: 18px; height: 18px;"></i>
+              <span>Publish Case Study</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+      <!-- Django add-result content block end:
+           {% endblock %} -->
+
+    </main>
+
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <!-- Global logic JS -->
+  <script src="/static/js/admin-main.js"></script>
+</body>
+</html>

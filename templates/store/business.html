@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2B Partnerships &amp; Distribution | Divya Sanjeevni</title>
+  <meta name="description" content="Discover distributor opportunities with Divya Sanjeevni and Riyansh Multitrade. Learn about qualifying kits, DP vs MRP margins, and matching bonuses.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+<body>
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+      
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link active">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..." aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         SECTION 1: HERO OVERVIEW & VIDEO
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-white); text-align: center; padding-bottom: 4rem;">
+      <div class="container">
+        <span class="eyebrow">Enterprise &amp; Franchise Network</span>
+        <h1 class="section-title" style="font-size: 2.75rem; margin-bottom: 1rem;">Distributor Partnerships</h1>
+        <p class="section-subtitle business-hero-subtitle" style="margin: 0 auto 2.5rem auto; max-width: 700px;">
+          Divya Sanjeevni, in partnership with Riyansh Multitrade, offers a robust entrepreneurial network enabling certified partners to distribute ancient wellness and achieve financial success. Watch the explainer video below to understand how our franchise network works.
+        </p>
+
+        <div class="video-container" style="max-width: 800px; margin: 0 auto; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);">
+          <video controls poster="{% static 'images/Ayurveda.png' %}" style="width: 100%; height: auto; display: block;">
+            <source src="/media/Business_Video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 2: HOW OUR BUSINESS WORKS (Direct Sales Model)
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-bg-warm); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <span class="eyebrow">Direct Sales &amp; Chain Marketing Model</span>
+          <h2 class="section-title">The Compensation Framework</h2>
+          <p class="section-subtitle" style="margin: 0 auto;">Review the steps to qualify as an authorized distributor and understand your earning potential.</p>
+        </div>
+
+        <!-- Compensation Step Cards Grid -->
+        <div class="comp-model-grid">
+          
+          <!-- Card 1: Entry -->
+          <div class="comp-step-card">
+            <div class="comp-header">
+              <span class="comp-badge">01</span>
+              <h3>Entry &amp; Qualification</h3>
+            </div>
+            <p class="comp-intro">Start your entrepreneurial journey</p>
+            <ul class="comp-details-list">
+              <li>
+                <strong>Qualifying Combo Kit</strong>
+                <span>Purchase an initial bundle of 6 flagship organic remedies to activate your distributor dashboard.</span>
+              </li>
+              <li>
+                <strong>225 Sales Points (SP)</strong>
+                <span>Your first purchase yields 225 SP, validating your status to access wholesale trade prices.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Card 2: Margins -->
+          <div class="comp-step-card highlighted">
+            <div class="comp-header">
+              <span class="comp-badge">02</span>
+              <h3>Pricing Advantage</h3>
+            </div>
+            <p class="comp-intro">Earn direct retail profit</p>
+            <ul class="comp-details-list">
+              <li>
+                <strong>Distributor Price (DP)</strong>
+                <span>Buy bulk stock at wholesale DP (e.g. ₹1,100 per unit) directly from Riyansh logistics.</span>
+              </li>
+              <li>
+                <strong>Maximum Retail Price (MRP)</strong>
+                <span>Sell to end customers at standard MRP (e.g. ₹2,000 per unit), retaining a 25% direct profit margin.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Card 3: Bonuses -->
+          <div class="comp-step-card">
+            <div class="comp-header">
+              <span class="comp-badge">03</span>
+              <h3>Income Tiers &amp; Rules</h3>
+            </div>
+            <p class="comp-intro">Leverage team performance rewards</p>
+            <ul class="comp-details-list">
+              <li>
+                <strong>Matching Bonus (1 SP = ₹2)</strong>
+                <span>Earn recurring matching bonuses based on coordinated point targets across your ORG 1 &amp; ORG 2 teams.</span>
+              </li>
+              <li>
+                <strong>Sponsor Bonus (50%-100%)</strong>
+                <span>Earn direct referrals sponsor bonuses matching up to 100% of their binary earnings.</span>
+              </li>
+              <li>
+                <strong>Weekly Settlements (5% TDS)</strong>
+                <span>Weekly payouts closed every Saturday night, processed with statutory 5% TDS. PAN card required.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 3: FREQUENTLY ASKED QUESTIONS (Accordion Layout)
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-white); padding-bottom: 4rem;">
+      <div class="container">
+        
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <span class="eyebrow">Distributor FAQ</span>
+          <h2 class="section-title">Partnership FAQ</h2>
+          <p class="section-subtitle" style="margin: 0 auto;">Find fast answers about qualifications, sales points calculations, single-leg support, and payment schedules.</p>
+        </div>
+
+        <div class="faq-accordion" id="business-faq">
+          
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">How do I register as an authorized distributor?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                You can apply through our Contact form by selecting B2B Partnerships. Once approved, you must purchase a qualifying combo kit containing 6 of our organic wellness juices or supplements (yielding 225 SP) to activate your account.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">How are Sales Points (SP) calculated for binary rewards?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                Every wellness product is assigned a specific SP value. The system tracks points accumulated in your Organization 1 (ORG 1) and Organization 2 (ORG 2) downlines. For matched points between both organizations, you are compensated at a rate of 1 SP = ₹2.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">What is single-leg income support, and how does it protect active referrers?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                If your downline expands rapidly on only one side (single-leg growth), you can still claim matching commissions through our Sponsor Bonus. This pays you a 50% to 100% bonus matching the binary matching earnings of your direct referrals, regardless of your personal binary leg balance.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">When are calculations finalized and payouts disbursed?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                The weekly binary ledger closes every Saturday at midnight. Calculated matching earnings are finalized, and direct-deposit payouts are processed on the subsequent Wednesday. All transactions are subject to a statutory 5% TDS deduction under government PAN regulations.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. | 
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Accordion Toggle handler
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const content = item.querySelector('.faq-content');
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+      // Close all other items
+      document.querySelectorAll('.faq-item').forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+          otherItem.querySelector('.faq-content').style.maxHeight = null;
+          otherItem.querySelector('.faq-header').setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      if (!isExpanded) {
+        item.classList.add('active');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        btn.setAttribute('aria-expanded', 'true');
+      } else {
+        item.classList.remove('active');
+        content.style.maxHeight = null;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+  </script>
+</body>
+</html>

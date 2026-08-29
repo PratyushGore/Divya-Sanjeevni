@@ -1,0 +1,397 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if study %}{{ study.patient_name }}{% else %}Transformation Case Study{% endif %} | Divya Sanjeevni</title>
+  <meta name="description" content="Read the full testimonial, practitioner observations, and treatment details for this transformation case study.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+<body>
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+      
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link active">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..." aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       RESULT/CASE STUDY HERO HEADER
+       ========================================== -->
+  {% if study %}
+    <header class="result-detail-header">
+      <div class="container">
+        <div class="result-detail-hero-content">
+          <span class="detail-metric-badge">{{ study.improvement_percentage }}% Improvement in {{ study.duration_weeks }} Weeks</span>
+          <h1 style="font-size: clamp(2rem, 4.5vw, 2.75rem); font-family: var(--font-serif); color: var(--color-white); font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2;">
+            {{ study.patient_name }}'s Journey
+          </h1>
+          <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.1rem;">
+            Condition Treated: {{ study.condition_treated }}{% if study.age %}, Age: {{ study.age }}{% endif %}
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==========================================
+         MEDIA SHOWCASE SECTION
+         ========================================== -->
+    <section class="container" style="padding: 0 1rem; margin-top: -2rem;">
+      <div class="detail-media-showcase">
+        {% if study.video_file or study.video_url %}
+          <div class="showcase-video-wrapper">
+            {% if study.video_file %}
+              <video controls poster="{{ study.after_image.url|default:'' }}">
+                <source src="{{ study.video_file.url }}" type="video/mp4">
+              </video>
+            {% else %}
+              <iframe src="{{ study.video_url }}" allowfullscreen></iframe>
+            {% endif %}
+          </div>
+        {% elif study.before_image and study.after_image %}
+          <div class="showcase-before-after">
+            <div class="showcase-img-container">
+              <span class="result-corner-badge before" style="top: 1rem; left: 1rem;">Before</span>
+              <img src="{{ study.before_image.url }}" alt="Before treatment image">
+            </div>
+            <div class="showcase-img-container">
+              <span class="result-corner-badge after" style="top: 1rem; right: 1rem;">After</span>
+              <img src="{{ study.after_image.url }}" alt="After treatment image">
+            </div>
+          </div>
+        {% else %}
+          <div class="showcase-before-after">
+            <div class="showcase-img-container">
+              <span class="result-corner-badge before" style="top: 1rem; left: 1rem;">Before</span>
+              <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder Before">
+            </div>
+            <div class="showcase-img-container">
+              <span class="result-corner-badge after" style="top: 1rem; right: 1rem;">After</span>
+              <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder After">
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- ==========================================
+         STORY & CLINICAL BREAKDOWN BLOCK
+         ========================================== -->
+    <main class="section-padding" style="background-color: var(--color-bg-warm); padding-top: 1rem;">
+      <div class="container">
+        <div class="clinical-layout">
+          
+          <!-- Left: Story Breakdown -->
+          <div class="story-block">
+            <h2 style="font-size: 1.75rem; color: var(--color-secondary); font-weight: 700; margin-bottom: 1rem;">Patient Testimonial</h2>
+            <p style="font-style: italic; font-size: 1.2rem; color: var(--color-secondary); border-left: 4px solid var(--color-primary); padding-left: 1.25rem; margin-bottom: 2rem; line-height: 1.6;">
+              "{{ study.testimonial }}"
+            </p>
+
+            <h2 style="font-size: 1.5rem; color: var(--color-secondary); font-weight: 700; margin-bottom: 0.75rem;">Practitioner Clinical Observations</h2>
+            <p>
+              The subject presented with symptoms of chronic inflammation and cellular fatigue. Standard Ayurvedic diagnostic markers indicated a metabolic imbalance.
+            </p>
+            <p>
+              Under consistent supervision and standard dosage cycles, a detoxification was initiated. Significant physiological improvements were logged within the first 14 days, with full stabilization achieved by the end of the treatment period.
+            </p>
+          </div>
+
+          <!-- Right: Metadata & Recommendation -->
+          <aside class="meta-sidebar">
+            <h3 class="meta-sidebar-title">Case Information</h3>
+            <ul class="meta-list">
+              <li>
+                <strong>Subject Name</strong>
+                <span>{{ study.patient_name }}</span>
+              </li>
+              {% if study.age %}
+                <li>
+                  <strong>Age</strong>
+                  <span>{{ study.age }} Years</span>
+                </li>
+              {% endif %}
+              <li>
+                <strong>Treatment Duration</strong>
+                <span>{{ study.duration_weeks }} Weeks Logged</span>
+              </li>
+            </ul>
+
+            <div class="recommendation-box">
+              <i data-lucide="award" style="color: var(--color-primary); width: 32px; height: 32px; margin-bottom: 0.5rem;"></i>
+              <h4 style="font-size: 1rem; color: var(--color-secondary); font-weight: 700; margin-bottom: 0.25rem;">Remedy Used</h4>
+              {% if recommended_product %}
+                <p style="font-size: 0.9rem; color: var(--color-dark-muted); margin-bottom: 1.25rem;">
+                  {{ recommended_product.title }}
+                </p>
+                <a href="{% url 'product_detail' recommended_product.slug %}" class="btn btn-outline-dark" style="padding: 0.5rem 1rem; font-size: 0.8rem; width: 100%;">
+                  View Remedy Details
+                </a>
+              {% else %}
+                <p style="font-size: 0.9rem; color: var(--color-dark-muted); margin-bottom: 1.25rem;">
+                  Ayurvedic Formula
+                </p>
+                <a href="{% url 'products' %}" class="btn btn-outline-dark" style="padding: 0.5rem 1rem; font-size: 0.8rem; width: 100%;">
+                  View Catalog
+                </a>
+              {% endif %}
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </main>
+
+  {% else %}
+    <!-- Fallback container for static preview (port 3000 / filesystem) -->
+    <header class="result-detail-header">
+      <div class="container">
+        <div class="result-detail-hero-content">
+          <span class="detail-metric-badge" id="fallback-metric">94% Improvement</span>
+          <h1 id="fallback-header-title" style="font-size: clamp(2rem, 4.5vw, 2.75rem); font-family: var(--font-serif); color: var(--color-white); font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2;">
+            Client Journey
+          </h1>
+          <p id="fallback-condition" style="color: rgba(255, 255, 255, 0.85); font-size: 1.1rem;">
+            Condition Treated: General Health Recovery
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="container" style="padding: 0 1rem; margin-top: -2rem;">
+      <div class="detail-media-showcase" id="fallback-media-box">
+        <!-- JS populated showcase (video player or before-after) -->
+      </div>
+    </section>
+
+    <main class="section-padding" style="background-color: var(--color-bg-warm); padding-top: 1rem;">
+      <div class="container">
+        <div class="clinical-layout">
+          
+          <div class="story-block">
+            <h2 style="font-size: 1.75rem; color: var(--color-secondary); font-weight: 700; margin-bottom: 1rem;">Patient Testimonial</h2>
+            <p id="fallback-testimonial" style="font-style: italic; font-size: 1.2rem; color: var(--color-secondary); border-left: 4px solid var(--color-primary); padding-left: 1.25rem; margin-bottom: 2rem; line-height: 1.6;">
+               testimonial text goes here...
+            </p>
+
+            <h2 style="font-size: 1.5rem; color: var(--color-secondary); font-weight: 700; margin-bottom: 0.75rem;">Practitioner Clinical Observations</h2>
+            <p>
+              Subject exhibited clear indicators of biological energy exhaustion. Initiated custom Ayurvedic cleansing remedies combined with minor dietary improvements.
+            </p>
+            <p>
+              Significant structural indicators stabilized within the first two weeks. Complete digestive recovery and metabolic metrics were achieved by the end of the treatment timeline.
+            </p>
+          </div>
+
+          <aside class="meta-sidebar">
+            <h3 class="meta-sidebar-title">Case Information</h3>
+            <ul class="meta-list">
+              <li>
+                <strong>Subject Name</strong>
+                <span id="fallback-name">Verified Client</span>
+              </li>
+              <li>
+                <strong>Treatment Duration</strong>
+                <span id="fallback-duration">4 Weeks</span>
+              </li>
+            </ul>
+
+            <div class="recommendation-box">
+              <i data-lucide="award" style="color: var(--color-primary); width: 32px; height: 32px; margin-bottom: 0.5rem;"></i>
+              <h4 style="font-size: 1rem; color: var(--color-secondary); font-weight: 700; margin-bottom: 0.25rem;">Remedy Recommended</h4>
+              <p id="fallback-remedy-title" style="font-size: 0.9rem; color: var(--color-dark-muted); margin-bottom: 1.25rem;">
+                Organic Juice
+              </p>
+              <a href="{% url 'products' %}" class="btn btn-outline-dark" style="padding: 0.5rem 1rem; font-size: 0.8rem; width: 100%;">
+                View Catalog
+              </a>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </main>
+  {% endif %}
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. | 
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // JS Fallback Renderer for Static Preview Mode
+    const DEMO_STUDIES = {
+      'result-1': {
+        name: 'Amit Kumar',
+        age: 34,
+        condition: 'Acidity & Gut Cleansing',
+        metric: '94% Digestion Relief',
+        duration: '4 Weeks',
+        remedy: 'Aloevera Wheatgrass Juice',
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        testimonial: 'Drinking Aloevera Wheatgrass Juice daily completely reset my digestive patterns. No more bloating or reflux within the first two weeks.'
+      },
+      'result-2': {
+        name: 'Sunita Devi',
+        age: 42,
+        condition: 'Hyperpigmentation & Glow',
+        metric: '92% Improvement',
+        duration: '4 Weeks',
+        remedy: 'Kumkumadi Brightening Serum',
+        beforeImg: 'https://images.unsplash.com/photo-1522337360788-8b13edd793be?auto=format&fit=crop&w=800&q=80',
+        afterImg: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80',
+        testimonial: 'Kumkumadi Brightening Serum reduced dark circles and patches on my cheeks. My face looks radiant and deeply hydrated.'
+      },
+      'result-3': {
+        name: 'Rajesh Sharma',
+        age: 29,
+        condition: 'Hair Fall & Scalp Care',
+        metric: '91% Hair Density Growth',
+        duration: '6 Weeks',
+        remedy: 'Herbal Hair Care Oil',
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        testimonial: 'Within 30 days of oiling with Herbal Hair Care oil, my severe hair fall dropped to near zero. New baby hair is visibly sprouting.'
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const fallbackCheck = document.getElementById('fallback-header-title');
+      if (!fallbackCheck) return; // Django template is running, ignore fallback loader
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || 'result-1';
+      const s = DEMO_STUDIES[id] || DEMO_STUDIES['result-1'];
+
+      // Populate static fields
+      document.title = `${s.name}'s Transformation Journey | Divya Sanjeevni`;
+      document.getElementById('fallback-metric').textContent = s.metric;
+      document.getElementById('fallback-header-title').textContent = `${s.name}'s Journey`;
+      document.getElementById('fallback-condition').textContent = `Condition Treated: ${s.condition}, Age: ${s.age}`;
+      document.getElementById('fallback-testimonial').textContent = `"${s.testimonial}"`;
+      document.getElementById('fallback-name').textContent = s.name;
+      document.getElementById('fallback-duration').textContent = s.duration;
+      document.getElementById('fallback-remedy-title').textContent = s.remedy;
+
+      // Populate media showcase
+      const mediaBox = document.getElementById('fallback-media-box');
+      if (s.video) {
+        mediaBox.innerHTML = `
+          <div class="showcase-video-wrapper">
+            <iframe src="${s.video}" allowfullscreen></iframe>
+          </div>
+        `;
+      } else {
+        mediaBox.innerHTML = `
+          <div class="showcase-before-after">
+            <div class="showcase-img-container">
+              <span class="result-corner-badge before" style="top:1rem;left:1rem;">Before</span>
+              <img src="${s.beforeImg}" alt="Before photo">
+            </div>
+            <div class="showcase-img-container">
+              <span class="result-corner-badge after" style="top:1rem;right:1rem;">After</span>
+              <img src="${s.afterImg}" alt="After photo">
+            </div>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

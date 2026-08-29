@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Dashboard | Divya Sanjeevni</title>
+  <meta name="description" content="Manage organic products, B2B wholesale inquiries, customer queries, and clinical proof studies for Divya Sanjeevni.">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/css/admin-styles.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       ADMIN PORTAL SHELL LAYOUT
+       ========================================== -->
+  <div class="app-shell">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" aria-label="Admin Navigation Sidebar">
+      <div class="sidebar-header">
+        <a href="/admin-dashboard.html" class="sidebar-logo">
+          <i data-lucide="leaf" style="color: var(--color-accent); width: 24px; height: 24px;"></i>
+          <span>Divya Sanjeevni</span>
+        </a>
+        <span class="admin-badge">Portal</span>
+      </div>
+
+      <!-- Navigation tabs -->
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/admin-dashboard.html" class="menu-link active">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard Overview</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-product.html" class="menu-link">
+            <i data-lucide="plus-circle"></i>
+            <span>Add Product</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-result.html" class="menu-link">
+            <i data-lucide="microscope"></i>
+            <span>Add Case Study</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-products.html" class="menu-link">
+            <i data-lucide="package"></i>
+            <span>Manage Products</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-results.html" class="menu-link">
+            <i data-lucide="clipboard-list"></i>
+            <span>Manage Results</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-categories.html" class="menu-link">
+            <i data-lucide="tags"></i>
+            <span>Manage Categories</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-contact-enquiries.html" class="menu-link">
+            <i data-lucide="message-square"></i>
+            <span>Contact Enquiries</span>
+            <span class="menu-badge" id="contact-enquiries-badge" style="{% if pending_enquiries_count == 0 %}display: none;{% endif %}">{{ pending_enquiries_count }}</span>
+          </a>
+        </li>
+        <li style="margin-top: auto; padding-top: 1rem;">
+          <!-- Quick link to return back to public site -->
+          <a href="/" target="_blank" class="menu-link" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent);">
+            <i data-lucide="external-link"></i>
+            <span>View Live Website</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar footer (Profile avatar & log-out) -->
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div class="admin-info">
+            <h4>Admin User</h4>
+            <p>Superuser</p>
+          </div>
+        </div>
+        <a href="{% url 'admin_logout' %}" class="logout-btn" aria-label="Log out account" style="display: inline-flex; align-items: center; justify-content: center;">
+          <i data-lucide="log-out"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- RIGHT SIDE WORKSPACE -->
+    <main class="main-workspace">
+      
+      <!-- Top header bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" aria-label="Toggle Sidebar Menu" aria-expanded="true">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search orders, leads, products..." aria-label="Global search">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Current Live Date/Time scheduler clock -->
+          <div class="time-indicator">
+            <i data-lucide="calendar"></i>
+            <span>Loading Calendar...</span>
+          </div>
+
+          <div class="header-actions">
+            <button class="header-btn" aria-label="View notifications">
+              <i data-lucide="bell"></i>
+              <span class="header-badge"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Django main content block template hint:
+           {% block dashboard_content %} -->
+      <div class="content-body">
+        
+        <!-- Header title -->
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Welcome Back, Manager</h2>
+            <p>Here is what's happening across the e-commerce platform today.</p>
+          </div>
+        </div>
+
+        <!-- 4-Column KPI summary cards (Requirement 1 & 2) -->
+        <section class="kpi-grid" aria-label="Key Performance Indicators">
+          
+          <!-- Total Products Listed -->
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-title">TOTAL PRODUCTS</span>
+              <div class="kpi-icon" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent);">
+                <i data-lucide="package"></i>
+              </div>
+            </div>
+            <div class="kpi-value-container">
+              <h3 class="kpi-number">{{ total_products }}</h3>
+              <span class="kpi-label">Listed</span>
+            </div>
+            <p class="kpi-subtext">— Catalog Items</p>
+          </div>
+
+          <!-- Total Published Case Studies / Results -->
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-title">EFFICACY RESULTS</span>
+              <div class="kpi-icon" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent);">
+                <i data-lucide="microscope"></i>
+              </div>
+            </div>
+            <div class="kpi-value-container">
+              <h3 class="kpi-number">{{ total_published_results }}</h3>
+              <span class="kpi-label">Published</span>
+            </div>
+            <p class="kpi-subtext">— Active Case Studies</p>
+          </div>
+
+          <!-- Total Contact Enquiries -->
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-title">TOTAL ENQUIRIES</span>
+              <div class="kpi-icon" style="background-color: rgba(30, 58, 43, 0.1); color: var(--color-sidebar);">
+                <i data-lucide="message-square"></i>
+              </div>
+            </div>
+            <div class="kpi-value-container">
+              <h3 class="kpi-number">{{ total_contact_enquiries }}</h3>
+              <span class="kpi-label">Messages</span>
+            </div>
+            <p class="kpi-subtext">— Customer Contact Logs</p>
+          </div>
+
+          <!-- Pending Enquiries Needing Attention -->
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-title">PENDING ENQUIRIES</span>
+              <div class="kpi-icon" style="background-color: rgba(245, 158, 11, 0.1); color: var(--color-warning);">
+                <i data-lucide="users"></i>
+              </div>
+            </div>
+            <div class="kpi-value-container">
+              <h3 class="kpi-number">{{ pending_enquiries }}</h3>
+              <span class="kpi-label">Active</span>
+            </div>
+            <p class="kpi-subtext">— Require Response</p>
+          </div>
+
+        </section>
+
+        <!-- Shortcuts Overview Section (Store Conversion Analytics is REMOVED) -->
+        <section style="margin-bottom: 2rem;">
+          <div class="shortcut-buttons" style="display: flex; flex-direction: row; gap: 1.5rem; width: 100%;">
+            <!-- Add product -->
+            <a href="/admin-add-product.html" class="shortcut-card" style="flex: 1; display: flex; align-items: center; gap: 1.25rem;">
+              <div class="shortcut-icon" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent); width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="plus"></i>
+              </div>
+              <div class="shortcut-info">
+                <h4>Add New Product</h4>
+                <p>Register new botanical remedy items to the catalog.</p>
+              </div>
+            </a>
+            <!-- Add Clinical result -->
+            <a href="/admin-add-result.html" class="shortcut-card" style="flex: 1; display: flex; align-items: center; gap: 1.25rem;">
+              <div class="shortcut-icon" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent); width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="file-plus"></i>
+              </div>
+              <div class="shortcut-info">
+                <h4>Publish Case Study</h4>
+                <p>Add scientific logs, video evidence, and trials.</p>
+              </div>
+            </a>
+            <!-- Manage Enquiries -->
+            <a href="/admin-contact-enquiries.html" class="shortcut-card" style="flex: 1; display: flex; align-items: center; gap: 1.25rem;">
+              <div class="shortcut-icon" style="background-color: rgba(30, 58, 43, 0.1); color: var(--color-sidebar); width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="message-square"></i>
+              </div>
+              <div class="shortcut-info">
+                <h4>Manage Enquiries</h4>
+                <p>Review customer contact messages and resolve queries.</p>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- Recent Contact Enquiry tables (B2B leads REMOVED) -->
+        <section class="dashboard-card" aria-label="Recent inquiries panel">
+          <div class="card-header-row">
+            <div class="card-title">
+              <h3>Recent Contact Enquiries</h3>
+            </div>
+            <a href="/admin-contact-enquiries.html" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;">View All Enquiries</a>
+          </div>
+
+          <div class="table-container">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Email Address</th>
+                  <th>Subject</th>
+                  <th>Date Submitted</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-enquiries-tbody">
+                {% for enquiry in recent_enquiries %}
+                <tr>
+                  <td style="font-weight: 600; color: var(--color-sidebar);">{{ enquiry.full_name }}</td>
+                  <td>{{ enquiry.email }}</td>
+                  <td>{{ enquiry.subject }}</td>
+                  <td>{{ enquiry.submitted_at|date:"M d, Y, h:i A" }}</td>
+                  <td>
+                    {% if enquiry.status == "Pending" %}
+                    <span class="status-badge status-pending"><i data-lucide="clock" style="width: 12px; height: 12px;"></i> Pending</span>
+                    {% else %}
+                    <span class="status-badge status-resolved"><i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> Resolved</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="action-row">
+                      <a href="/admin-contact-enquiries.html?id={{ enquiry.id }}" class="action-icon-btn btn-resolve" title="View Enquiry"><i data-lucide="eye"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 2rem; color: var(--color-text-muted);">No enquiries found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+      <!-- Django dashboard block end:
+           {% endblock %} -->
+
+    </main>
+
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <!-- Global logic JS -->
+  <script src="/static/js/admin-main.js"></script>
+</body>
+</html>

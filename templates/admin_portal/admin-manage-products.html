@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Manage Products | Divya Sanjeevni</title>
+  <meta name="description" content="View, edit, feature, and delete products from the Divya Sanjeevni catalog.">
+  <link rel="stylesheet" href="/static/css/admin-styles.css">
+  <style>
+    .manage-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .manage-table th { background: var(--color-surface-2); color: var(--color-text-muted); font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid var(--color-border); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .manage-table td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+    .manage-table tr:last-child td { border-bottom: none; }
+    .manage-table tr:hover td { background: var(--color-surface-2); }
+    .product-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: var(--color-surface-2); display: flex; align-items: center; justify-content: center; }
+    .product-thumb img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
+    .product-thumb-placeholder { width: 48px; height: 48px; border-radius: 8px; background: var(--color-surface-2); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); }
+    .badge-featured { background: rgba(118,186,27,0.15); color: var(--color-accent); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
+    .badge-stock { background: rgba(59,130,246,0.15); color: #3b82f6; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
+    .badge-outstock { background: rgba(239,68,68,0.15); color: #ef4444; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
+    .action-btns { display: flex; gap: 0.5rem; }
+    .btn-edit { padding: 0.4rem 0.85rem; background: rgba(118,186,27,0.12); color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-edit:hover { background: var(--color-accent); color: white; }
+    .btn-delete { padding: 0.4rem 0.85rem; background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-delete:hover { background: #ef4444; color: white; }
+    /* Edit Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #ffffff; border-radius: 16px; width: 680px; max-width: 96vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
+    .modal-header { padding: 1.5rem 1.75rem 1rem; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--color-text); }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; background: var(--color-surface-2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); font-size: 1.1rem; transition: background 0.2s; }
+    .modal-close:hover { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .modal-body { padding: 1.5rem 1.75rem; }
+    .modal-footer { padding: 1rem 1.75rem 1.5rem; border-top: 1px solid var(--color-border); display: flex; gap: 0.75rem; justify-content: flex-end; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1.15rem; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .form-control { width: 100%; padding: 0.6rem 0.9rem; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text); font-size: 0.875rem; transition: border 0.2s; }
+    .form-control:focus { outline: none; border-color: var(--color-accent); }
+    .alert-success { background: rgba(118,186,27,0.15); color: var(--color-accent); border: 1px solid rgba(118,186,27,0.35); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; display: none; margin-bottom: 1rem; }
+    .alert-error { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; display: none; margin-bottom: 1rem; }
+    .table-search { position: relative; }
+    .table-search input { padding: 0.55rem 1rem 0.55rem 2.5rem; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface-2); color: var(--color-text); font-size: 0.875rem; width: 260px; }
+    .table-search i { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--color-text-muted); width: 16px; height: 16px; }
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--color-text-muted); }
+    .empty-state i { width: 48px; height: 48px; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" aria-label="Admin Navigation Sidebar">
+      <div class="sidebar-header">
+        <a href="/admin-dashboard.html" class="sidebar-logo">
+          <i data-lucide="leaf" style="color: var(--color-accent); width: 24px; height: 24px;"></i>
+          <span>Divya Sanjeevni</span>
+        </a>
+        <span class="admin-badge">Portal</span>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li><a href="/admin-dashboard.html" class="menu-link"><i data-lucide="layout-dashboard"></i><span>Dashboard Overview</span></a></li>
+        <li><a href="/admin-add-product.html" class="menu-link"><i data-lucide="plus-circle"></i><span>Add Product</span></a></li>
+        <li><a href="/admin-add-result.html" class="menu-link"><i data-lucide="microscope"></i><span>Add Case Study</span></a></li>
+        <li><a href="/admin-manage-products.html" class="menu-link active"><i data-lucide="package"></i><span>Manage Products</span></a></li>
+        <li><a href="/admin-manage-results.html" class="menu-link"><i data-lucide="clipboard-list"></i><span>Manage Results</span></a></li>
+        <li><a href="/admin-categories.html" class="menu-link"><i data-lucide="tags"></i><span>Manage Categories</span></a></li>
+        <li>
+          <a href="/admin-contact-enquiries.html" class="menu-link">
+            <i data-lucide="message-square"></i><span>Contact Enquiries</span>
+            <span class="menu-badge" id="contact-enquiries-badge" style="{% if pending_enquiries_count == 0 %}display: none;{% endif %}">{{ pending_enquiries_count }}</span>
+          </a>
+        </li>
+        <li style="margin-top: auto; padding-top: 1rem;">
+          <a href="/" target="_blank" class="menu-link" style="background-color: rgba(118,186,27,0.1); color: var(--color-accent);">
+            <i data-lucide="external-link"></i><span>View Live Website</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div class="admin-info"><h4>Admin User</h4><p>Superuser</p></div>
+        </div>
+        <a href="{% url 'admin_logout' %}" class="logout-btn" aria-label="Log out" style="display:inline-flex;align-items:center;justify-content:center;">
+          <i data-lucide="log-out"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="main-workspace">
+
+      <!-- Top header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" aria-label="Toggle Sidebar"><i data-lucide="menu"></i></button>
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search products..." aria-label="Search" id="global-search">
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="time-indicator"><i data-lucide="calendar"></i><span id="current-date">Loading...</span></div>
+          <div class="header-actions">
+            <button class="header-btn" aria-label="Notifications"><i data-lucide="bell"></i></button>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-body">
+
+        <!-- Header -->
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Manage Products</h2>
+            <p>Edit, feature on home page, or delete products from your catalog ({{ products|length }} total).</p>
+          </div>
+          <a href="/admin-add-product.html" class="btn btn-primary">
+            <i data-lucide="plus" style="width:16px;height:16px;"></i>
+            <span>Add New Product</span>
+          </a>
+        </div>
+
+        <!-- Global alert -->
+        <div id="page-alert" class="alert-success" style="display:none;"></div>
+        <div id="page-alert-err" class="alert-error" style="display:none;"></div>
+
+        <!-- Table card -->
+        <div class="form-card" style="padding:0; overflow:hidden;">
+
+          <!-- Table toolbar -->
+          <div style="padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--color-border);">
+            <div class="table-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="table-filter" placeholder="Filter products..." oninput="filterTable()">
+            </div>
+            <span style="font-size:0.8rem; color:var(--color-text-muted);" id="row-count"></span>
+          </div>
+
+          {% if products %}
+          <div style="overflow-x:auto;">
+            <table class="manage-table" id="products-table">
+              <thead>
+                <tr>
+                  <th style="width:60px;">Image</th>
+                  <th>Product Title</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Featured</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr data-id="{{ product.id }}">
+                  <td>
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-thumb">
+                    {% else %}
+                      <div class="product-thumb-placeholder"><i data-lucide="image" style="width:20px;height:20px;"></i></div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div style="font-weight:600; color:var(--color-text); margin-bottom:2px;">{{ product.title }}</div>
+                    <div style="font-size:0.75rem; color:var(--color-text-muted);">{{ product.slug }}</div>
+                  </td>
+                  <td style="color:var(--color-text-muted); font-size:0.85rem;">{{ product.category.name }}</td>
+                  <td>
+                    <div style="font-weight:700; color:var(--color-text);">₹{{ product.regular_price }}</div>
+                    {% if product.sale_price %}
+                    <div style="font-size:0.75rem; color:var(--color-accent);">Sale: ₹{{ product.sale_price }}</div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if product.is_in_stock %}
+                      <span class="badge-stock">In Stock</span>
+                    {% else %}
+                      <span class="badge-outstock">Out of Stock</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if product.is_featured %}
+                      <span class="badge-featured">⭐ Featured</span>
+                    {% else %}
+                      <span style="font-size:0.75rem;color:var(--color-text-muted);">—</span>
+                    {% endif %}
+                  </td>
+                  <td style="text-align:right;">
+                    <div class="action-btns" style="justify-content:flex-end;">
+                      <button class="btn-edit" data-id="{{ product.id }}" onclick="openEditModal(this.dataset.id)">
+                        <i data-lucide="pencil" style="width:13px;height:13px;vertical-align:middle;"></i> Edit
+                      </button>
+                      <button class="btn-delete" data-id="{{ product.id }}" data-title="{{ product.title|escapejs }}" onclick="deleteProduct(this.dataset.id, this.dataset.title)">
+                        <i data-lucide="trash-2" style="width:13px;height:13px;vertical-align:middle;"></i> Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i data-lucide="package-x" style="width:48px;height:48px;margin:0 auto 1rem;display:block;color:var(--color-text-muted);"></i>
+            <h3 style="font-size:1.2rem;margin-bottom:0.5rem;">No Products Yet</h3>
+            <p>Start by adding your first product to the catalog.</p>
+            <a href="/admin-add-product.html" class="btn btn-primary" style="margin-top:1.5rem;">Add First Product</a>
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- EDIT PRODUCT MODAL -->
+  <div class="modal-overlay" id="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="edit-modal-title">Edit Product</h3>
+        <button class="modal-close" onclick="closeEditModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-alert" class="alert-success"></div>
+        <div id="modal-alert-err" class="alert-error"></div>
+        <form id="edit-product-form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" id="edit-product-id">
+
+          <div class="form-group">
+            <label class="form-label">Product Title *</label>
+            <input type="text" id="edit-title" name="title" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Slug (URL identifier)</label>
+            <input type="text" id="edit-slug" name="slug" class="form-control">
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Regular Price (₹) *</label>
+              <input type="number" id="edit-price" name="regular_price" class="form-control" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sale Price (₹)</label>
+              <input type="number" id="edit-sale-price" name="sale_price" class="form-control" step="0.01" min="0">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select id="edit-category" name="category" class="form-control" required>
+                {% for cat in categories %}
+                  <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Image (Primary)</label>
+              <input type="file" id="edit-image" name="image" class="form-control" accept="image/*">
+              <p id="edit-image-current" style="font-size:0.72rem;color:var(--color-accent);margin-top:0.3rem;display:none;"></p>
+              <p style="font-size:0.72rem;color:var(--color-text-muted);margin-top:0.1rem;">Leave blank to keep existing image.</p>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Product Image (Thumbnail 2)</label>
+              <input type="file" id="edit-image-2" name="image_2" class="form-control" accept="image/*">
+              <p id="edit-image-2-current" style="font-size:0.72rem;color:var(--color-accent);margin-top:0.3rem;display:none;"></p>
+              <p style="font-size:0.72rem;color:var(--color-text-muted);margin-top:0.1rem;">Leave blank to keep existing image.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Image (Thumbnail 3)</label>
+              <input type="file" id="edit-image-3" name="image_3" class="form-control" accept="image/*">
+              <p id="edit-image-3-current" style="font-size:0.72rem;color:var(--color-accent);margin-top:0.3rem;display:none;"></p>
+              <p style="font-size:0.72rem;color:var(--color-text-muted);margin-top:0.1rem;">Leave blank to keep existing image.</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description *</label>
+            <textarea id="edit-description" name="description" class="form-control" rows="4" required></textarea>
+          </div>
+
+          <div style="display:flex; gap:2rem; margin-top:0.5rem;">
+            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;">
+              <input type="checkbox" id="edit-featured" name="is_featured" style="accent-color:var(--color-accent);width:16px;height:16px;">
+              <span>⭐ Featured on Home Page</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;">
+              <input type="checkbox" id="edit-in-stock" name="is_in_stock" style="accent-color:var(--color-accent);width:16px;height:16px;">
+              <span>✅ In Stock</span>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+        <button class="btn btn-primary" id="save-btn" onclick="saveProduct()">
+          <i data-lucide="save" style="width:15px;height:15px;"></i>
+          <span>Save Changes</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Date display
+    const d = new Date();
+    document.getElementById('current-date').textContent = d.toLocaleDateString('en-IN', {weekday:'short', year:'numeric', month:'short', day:'numeric'});
+
+    // Row count
+    function updateRowCount() {
+      const rows = document.querySelectorAll('#products-table tbody tr:not([style*="display: none"])');
+      document.getElementById('row-count').textContent = rows.length + ' product(s)';
+    }
+    updateRowCount();
+
+    // Table filter
+    function filterTable() {
+      const q = document.getElementById('table-filter').value.toLowerCase();
+      document.querySelectorAll('#products-table tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      updateRowCount();
+    }
+
+    // Show alerts
+    function showAlert(msg, isError=false) {
+      const el = isError ? document.getElementById('page-alert-err') : document.getElementById('page-alert');
+      const other = isError ? document.getElementById('page-alert') : document.getElementById('page-alert-err');
+      other.style.display = 'none';
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
+    }
+
+    function showModalAlert(msg, isError=false) {
+      const el = isError ? document.getElementById('modal-alert-err') : document.getElementById('modal-alert');
+      const other = isError ? document.getElementById('modal-alert') : document.getElementById('modal-alert-err');
+      other.style.display = 'none';
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    // Open edit modal — fetch product data
+    async function openEditModal(productId) {
+      document.getElementById('modal-alert').style.display = 'none';
+      document.getElementById('modal-alert-err').style.display = 'none';
+
+      const resp = await fetch(`/api/admin/products/${productId}/`);
+      if (!resp.ok) { alert('Failed to load product data.'); return; }
+      const p = await resp.json();
+
+      document.getElementById('edit-product-id').value = p.id;
+      document.getElementById('edit-title').value = p.title;
+      document.getElementById('edit-slug').value = p.slug;
+      document.getElementById('edit-description').value = p.description;
+      document.getElementById('edit-price').value = p.regular_price;
+      document.getElementById('edit-sale-price').value = p.sale_price || '';
+      document.getElementById('edit-category').value = p.category_id;
+      document.getElementById('edit-featured').checked = p.is_featured;
+      document.getElementById('edit-in-stock').checked = p.is_in_stock;
+      document.getElementById('edit-image').value = '';
+      document.getElementById('edit-image-2').value = '';
+      document.getElementById('edit-image-3').value = '';
+
+      const primaryEl = document.getElementById('edit-image-current');
+      if (p.image_url) {
+        primaryEl.textContent = 'Current: ' + p.image_url.split('/').pop();
+        primaryEl.style.display = 'block';
+      } else {
+        primaryEl.style.display = 'none';
+      }
+
+      const img2El = document.getElementById('edit-image-2-current');
+      if (p.image_2_url) {
+        img2El.textContent = 'Current: ' + p.image_2_url.split('/').pop();
+        img2El.style.display = 'block';
+      } else {
+        img2El.style.display = 'none';
+      }
+
+      const img3El = document.getElementById('edit-image-3-current');
+      if (p.image_3_url) {
+        img3El.textContent = 'Current: ' + p.image_3_url.split('/').pop();
+        img3El.style.display = 'block';
+      } else {
+        img3El.style.display = 'none';
+      }
+
+      document.getElementById('edit-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on overlay click
+    document.getElementById('edit-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeEditModal();
+    });
+
+    // Save product (edit)
+    async function saveProduct() {
+      const productId = document.getElementById('edit-product-id').value;
+      const form = document.getElementById('edit-product-form');
+      const fd = new FormData(form);
+      const btn = document.getElementById('save-btn');
+
+      // Ensure checkboxes send correctly
+      if (!document.getElementById('edit-featured').checked) fd.delete('is_featured');
+      if (!document.getElementById('edit-in-stock').checked) fd.delete('is_in_stock');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader" style="width:15px;height:15px;"></i> Saving...';
+      lucide.createIcons();
+
+      try {
+        const resp = await fetch(`/api/admin/products/${productId}/`, {
+          method: 'POST',
+          body: fd,
+          headers: { 'X-CSRFToken': fd.get('csrfmiddlewaretoken') }
+        });
+        const data = await resp.json();
+        if (data.status === 'success') {
+          showModalAlert(data.message);
+          setTimeout(() => { closeEditModal(); location.reload(); }, 1200);
+        } else {
+          showModalAlert('Error: ' + JSON.stringify(data.errors || data.message), true);
+        }
+      } catch(e) {
+        showModalAlert('Network error. Please try again.', true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="save" style="width:15px;height:15px;"></i> <span>Save Changes</span>';
+        lucide.createIcons();
+      }
+    }
+
+    // Delete product
+    async function deleteProduct(productId, title) {
+      if (!confirm(`Delete "${title}"? This action cannot be undone.`)) return;
+
+      try {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const resp = await fetch(`/api/admin/products/${productId}/`, {
+          method: 'DELETE',
+          headers: { 'X-CSRFToken': csrfToken }
+        });
+        const data = await resp.json();
+        if (data.status === 'success') {
+          showAlert(data.message);
+          document.querySelector(`tr[data-id="${productId}"]`).remove();
+          updateRowCount();
+        } else {
+          showAlert(data.message, true);
+        }
+      } catch(e) {
+        showAlert('Network error. Please try again.', true);
+      }
+    }
+  </script>
+  <!-- Needed for CSRF in JS delete -->
+  <form style="display:none;">{% csrf_token %}</form>
+  <script src="/static/js/admin-main.js"></script>
+</body>
+</html>

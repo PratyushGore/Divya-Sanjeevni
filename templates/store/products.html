@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Natural Wellness Catalog | Divya Sanjeevni</title>
+  <meta name="description" content="Browse our organic Ayurvedic wellness catalog. Find pure juices, daily capsules, oils, and targeted remedies.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+<body>
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+      
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link active">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..." aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section-padding">
+    <div class="container">
+      
+      <!-- Catalog Header -->
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <span class="eyebrow">Divya Sanjeevni Remedies</span>
+        <h1 class="section-title" style="font-size: 2.5rem;">Natural Ayurvedic Catalog</h1>
+        <p class="section-subtitle" style="margin: 0 auto;">Select from our premium, clinically tested organic wellness products partnerd with Riyansh Multitrade.</p>
+      </div>
+
+      <!-- Shop Layout Grid -->
+      <div class="shop-layout">
+        
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar" id="filter-sidebar-container">
+          
+          <!-- Mobile Filters Toggle Button -->
+          <div class="mobile-filter-toggle-btn" id="mobile-filter-toggle">
+            <span>Filters &amp; Sorting</span>
+            <i data-lucide="chevron-down" class="filter-main-toggle-icon"></i>
+          </div>
+
+          <div class="filter-content-wrapper" id="filter-content-wrapper">
+            <!-- Category Widget -->
+            <div class="filter-widget" id="category-filter-widget">
+              <h3 class="filter-title">Categories</h3>
+              <ul class="filter-list">
+                {% if categories %}
+                  {% for category in categories %}
+                    <li class="filter-item">
+                      <label class="filter-checkbox-label">
+                        <input type="checkbox" name="category" value="{{ category.slug }}" class="category-filter-checkbox">
+                        <span>{{ category.name }} ({{ category.product_count|default:"0" }})</span>
+                      </label>
+                    </li>
+                  {% endfor %}
+                {% else %}
+                  <li class="filter-item" style="color: var(--color-dark-muted); font-size: 0.9rem; font-style: italic;">
+                    No categories available
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+
+            <!-- Price range filter widget -->
+            <div class="filter-widget">
+              <h3 class="filter-title">Filter by Price</h3>
+              <input type="range" id="price-range" min="0" max="3000" value="3000" aria-label="Filter by Price">
+              <div class="price-range-inputs">
+                <span>₹0</span>
+                <span id="price-range-val">₹3,000</span>
+              </div>
+            </div>
+
+            <!-- Sort dropdown widget -->
+            <div class="filter-widget">
+              <h3 class="filter-title">Sort By</h3>
+              <select id="sort-filter" class="sort-select" aria-label="Sort products">
+                <option value="popular">Most Popular</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Product Listing Grid Area -->
+        <div>
+          <!-- Top bar -->
+          <div class="shop-topbar">
+            <div class="results-count">
+              Showing <span id="displayed-count">{% if products %}{{ products.count }}{% else %}0{% endif %}</span> Remedies
+            </div>
+          </div>
+
+          <!-- Responsive Product Grid -->
+          <div class="product-grid" id="catalog-products-grid">
+            {% if products %}
+              {% for product in products %}
+                <div class="product-card" data-category="{{ product.category.slug }}" data-price="{{ product.sale_price|default:product.regular_price }}">
+                  {% if product.is_in_stock %}
+                    <span class="badge badge-in-stock">In Stock</span>
+                  {% elif product.is_featured %}
+                    <span class="badge badge-featured">Featured</span>
+                  {% endif %}
+                  
+                  <a href="{% url 'product_detail' product.slug %}">
+                    <div class="product-image-box">
+                      {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                      {% else %}
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder image">
+                      {% endif %}
+                    </div>
+                  </a>
+
+                  <div class="product-card-body">
+                    <span class="category-tag">{{ product.category.name }}</span>
+                    <h4 class="product-title">
+                      <a href="{% url 'product_detail' product.slug %}">{{ product.title }}</a>
+                    </h4>
+                    <div class="rating-stars" aria-label="5 stars">
+                      <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                    </div>
+                    <div class="price-row">
+                      <span class="current-price">₹{{ product.sale_price|default:product.regular_price }}</span>
+                      {% if product.sale_price %}
+                        <span class="price-old">₹{{ product.regular_price }}</span>
+                      {% endif %}
+                    </div>
+                    <a href="{% url 'contact' %}?product={{ product.slug }}" class="btn-inquire">Inquire Now</a>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-catalog-message" style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; background: var(--color-bg-warm); border-radius: 12px; border: 1px dashed rgba(0,0,0,0.1); width: 100%;">
+                <i data-lucide="shopping-bag" style="width: 48px; height: 48px; color: var(--color-primary); margin-bottom: 1rem; opacity: 0.7; display: inline-block;"></i>
+                <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--color-secondary); margin-bottom: 0.5rem; font-weight: 600;">No remedies found</p>
+                <p style="font-size: 0.95rem; color: var(--color-dark-muted); max-width: 400px; margin: 0 auto 1.5rem;">Our botanical inventory is currently being updated. Please check back soon or get in touch with us.</p>
+                <a href="{% url 'contact' %}" class="btn btn-outline-dark" style="font-size: 0.9rem; padding: 0.5rem 1.5rem; display: inline-block;">Contact Us</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. | 
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Client-side Price Range Slider Update and Filtering
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mobile main Filters toggle collapse functionality
+      const filterSidebar = document.getElementById('filter-sidebar-container');
+      const filterToggle = document.getElementById('mobile-filter-toggle');
+      if (filterSidebar && filterToggle) {
+        filterToggle.addEventListener('click', () => {
+          filterSidebar.classList.toggle('collapsed');
+        });
+        
+        // Collapse by default on mobile screen sizes
+        if (window.innerWidth <= 768) {
+          filterSidebar.classList.add('collapsed');
+        }
+      }
+
+      const priceRange = document.getElementById('price-range');
+      const priceVal = document.getElementById('price-range-val');
+      const products = document.querySelectorAll('.product-card');
+      const checkboxes = document.querySelectorAll('.category-filter-checkbox');
+      const sortSelect = document.getElementById('sort-filter');
+      const countEl = document.getElementById('displayed-count');
+
+      // Update range value text
+      if (priceRange && priceVal) {
+        priceRange.addEventListener('input', () => {
+          priceVal.textContent = '₹' + parseInt(priceRange.value).toLocaleString('en-IN');
+          filterProducts();
+        });
+      }
+
+      // Checkbox changes
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', filterProducts);
+      });
+
+      // Sort Select changes
+      if (sortSelect) {
+        sortSelect.addEventListener('change', sortProducts);
+      }
+
+      function filterProducts() {
+        let maxPrice = priceRange ? parseInt(priceRange.value) : Infinity;
+        let selectedCategories = Array.from(checkboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value);
+
+        let visibleCount = 0;
+        products.forEach(card => {
+          const cardCat = card.getAttribute('data-category');
+          const cardPrice = parseFloat(card.getAttribute('data-price') || 0);
+
+          let priceMatch = cardPrice <= maxPrice;
+          let categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(cardCat);
+
+          if (priceMatch && categoryMatch) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (countEl) countEl.textContent = visibleCount;
+      }
+
+      function sortProducts() {
+        const grid = document.getElementById('catalog-products-grid');
+        if (!grid) return;
+        const cardsArray = Array.from(products);
+        const sortVal = sortSelect.value;
+
+        cardsArray.sort((a, b) => {
+          const priceA = parseFloat(a.getAttribute('data-price') || 0);
+          const priceB = parseFloat(b.getAttribute('data-price') || 0);
+
+          if (sortVal === 'low-high') {
+            return priceA - priceB;
+          } else if (sortVal === 'high-low') {
+            return priceB - priceA;
+          }
+          // Default popular sorting (reverts to original layout sorting)
+          return 0;
+        });
+
+        cardsArray.forEach(card => grid.appendChild(card));
+      }
+    });
+  </script>
+</body>
+</html>

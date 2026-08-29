@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Divya Sanjeevni</title>
+  <meta name="description" content="Administrative access control portal for Divya Sanjeevni.">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/css/admin-styles.css">
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-card animate-fade-in">
+      
+      <!-- Brand Logo -->
+      <div class="login-logo">
+        <i data-lucide="leaf" style="color: var(--color-accent); width: 28px; height: 28px;"></i>
+        <span>Divya Sanjeevni</span>
+      </div>
+
+      <!-- Header Info -->
+      <div class="login-header">
+        <h2>Administrator Access</h2>
+        <p>Enter your credentials below to access the management portal.</p>
+      </div>
+
+      <!-- Error Notification Alert -->
+      {% if error_message %}
+      <div class="login-error">
+        <i data-lucide="alert-circle"></i>
+        <span>{{ error_message }}</span>
+      </div>
+      {% endif %}
+
+      <!-- Login Form -->
+      <form method="post" action="{% url 'admin_login' %}{% if next %}?next={{ next }}{% endif %}" class="login-form">
+        {% csrf_token %}
+        
+        <!-- Hidden Next Redirect Field -->
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+
+        <!-- Username Input -->
+        <div class="login-field">
+          <label for="username">Username</label>
+          <div class="login-input-wrapper">
+            <i data-lucide="user"></i>
+            <input 
+              type="text" 
+              name="username" 
+              id="username" 
+              class="login-input" 
+              placeholder="Enter administrator username"
+              required 
+              autofocus
+            >
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="login-field">
+          <label for="password">Password</label>
+          <div class="login-input-wrapper">
+            <i data-lucide="lock"></i>
+            <input 
+              type="password" 
+              name="password" 
+              id="password" 
+              class="login-input" 
+              placeholder="Enter administrator password"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Submit Action Button -->
+        <button type="submit" class="login-btn">
+          <span>Authenticate Session</span>
+          <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+        </button>
+      </form>
+
+      <!-- Back to Live Website Link -->
+      <div class="login-back-link">
+        <a href="/">
+          <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+          <span>Return to Storefront</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Django ignore list
+.env
+db.sqlite3
+__pycache__/
+*.pyc
+media/
+static/assets/
+staticfiles/
+logs/
+.agents/
+.gemini/
+venv/
+.vscode/
+.idea/
+*.log

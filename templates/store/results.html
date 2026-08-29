@@ -1,0 +1,339 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Results, Real Transformations | Divya Sanjeevni</title>
+  <meta name="description" content="View verified wellness logs, before-after photos, video testimonies, and safety standards certifications.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+<body>
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+      
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link active">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..." aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         HERO HEADER
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-white); text-align: center; padding-bottom: 2rem;">
+      <div class="container">
+        <span class="eyebrow">Transformation Proof</span>
+        <h1 class="section-title" style="font-size: 2.75rem;">Real Results, Real Transformations</h1>
+        <p class="section-subtitle" style="margin: 0 auto;">Explore documented patient efficacy trials, clinic recovery metrics, and verified customer video testimonies.</p>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         INTERACTIVE MEDIA FILTER PILLS
+         ========================================== -->
+    <section class="container" style="padding-bottom: 1.5rem;">
+      <div class="media-filter-bar" id="media-filters">
+        <button class="filter-pill active" data-filter="all">All Proofs</button>
+        <button class="filter-pill" data-filter="photo">Before &amp; After Photos</button>
+        <button class="filter-pill" data-filter="video">Customer Video Reviews</button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         UNIFORM CASE STUDIES GRID (3 Columns)
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-bg-warm); padding-top: 1rem;">
+      <div class="container">
+        <div class="case-studies-grid" id="transformation-grid">
+          
+          {% if case_studies %}
+            {% for study in case_studies %}
+              <div class="case-study-card" data-media-type="{% if study.video_file or study.video_url %}video{% else %}photo{% endif %}">
+                <div class="result-card-media">
+                  {% if study.video_file or study.video_url %}
+                    <div class="result-video-wrapper">
+                      {% if study.video_file %}
+                        <video controls>
+                          <source src="{{ study.video_file.url }}" type="video/mp4">
+                        </video>
+                      {% else %}
+                        <iframe src="{{ study.video_url }}" allowfullscreen></iframe>
+                      {% endif %}
+                    </div>
+                  {% elif study.before_image and study.after_image %}
+                    <div class="result-before-after">
+                      <div class="result-image-container">
+                        <span class="result-corner-badge before">Before</span>
+                        <img src="{{ study.before_image.url }}" alt="Before Treatment">
+                      </div>
+                      <div class="result-image-container">
+                        <span class="result-corner-badge after">After</span>
+                        <img src="{{ study.after_image.url }}" alt="After Treatment">
+                      </div>
+                    </div>
+                  {% else %}
+                    <!-- Clear Static Placeholder Fallback -->
+                    <div class="result-before-after">
+                      <div class="result-image-container">
+                        <span class="result-corner-badge before">Before</span>
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder Before">
+                      </div>
+                      <div class="result-image-container">
+                        <span class="result-corner-badge after">After</span>
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder After">
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="result-card-body">
+                  <span class="result-metric">{{ study.improvement_percentage }}% Improvement</span>
+                  <h4>
+                    <a href="{% url 'result_detail' study.id %}">{{ study.patient_name }}{% if study.age %}, {{ study.age }}{% endif %}</a>
+                  </h4>
+                  <p class="result-meta">Goal: {{ study.condition_treated }} in {{ study.duration_weeks }} Weeks</p>
+                  <p class="result-testimonial">"{{ study.testimonial }}"</p>
+                  
+                  {% if study.associated_product %}
+                    <div class="result-footer">
+                      <a href="{% url 'product_detail' study.associated_product.slug %}" class="result-product-link">
+                        Used: {{ study.associated_product.title }}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-results-message" style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; background: var(--color-bg-warm); border-radius: 12px; border: 1px dashed rgba(0,0,0,0.1); width: 100%;">
+              <i data-lucide="clipboard-list" style="width: 48px; height: 48px; color: var(--color-primary); margin-bottom: 1rem; opacity: 0.7; display: inline-block;"></i>
+              <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--color-secondary); margin-bottom: 0.5rem; font-weight: 600;">No case studies found</p>
+              <p style="font-size: 0.95rem; color: var(--color-dark-muted); max-width: 400px; margin: 0 auto;">We will be publishing new patient efficacy trials and clinical results soon. Stay tuned!</p>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         COMPANY FAQ SECTION (Accordion Layout)
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-white); padding-bottom: 4rem;">
+      <div class="container">
+        
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <span class="eyebrow">Safety &amp; Efficacy FAQ</span>
+          <h2 class="section-title">Quality Assurance &amp; Guidelines</h2>
+          <p class="section-subtitle" style="margin: 0 auto;">Frequently asked questions regarding certifications, visible transformation timelines, and reporting logs.</p>
+        </div>
+
+        <div class="faq-accordion" id="faq-accordion">
+          
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">Are these Ayurvedic formulations certified and safe for daily use?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                Yes, all Divya Sanjeevni juices, capsules, and skincare formulations are manufactured in ISO 9001:2015 certified, GMP-compliant facilities. Our entire catalog holds safety clearance licenses and conforms to strict quality standard norms set under the Ministry of AYUSH.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">How long does it typically take to see visible results from your wellness supplements?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                While mild improvements in cellular energy levels and digestion are logged within the first 14 days, structural physiological changes take time. We recommend consistent intake for 12 weeks to allow active herbal elements to fully detoxify and balance your body’s metabolic functions.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">How do I select the right health product for my specific wellness goals?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                We classify our Ayurvedic items based on specific goals (Digestion, Skin Health, Hair care, Immunity). You can review the health objectives linked on individual product pages or click the contact link to register for a customized consultation from a certified Divya Sanjeevni wellness advisor.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-header" aria-expanded="false" onclick="toggleFaq(this)">
+              <span class="faq-question">Can I submit my own video testimony or transformation log?</span>
+              <i data-lucide="chevron-down" class="faq-arrow"></i>
+            </button>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                We absolutely welcome user feedback! You can upload before/after photos and video logs directly through your customer/distributor panel under the 'My Transformations' settings tab, or send them over via our B2B inquiry form to get featured.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. | 
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Client-side category filter pills
+    document.addEventListener('DOMContentLoaded', () => {
+      const pills = document.querySelectorAll('#media-filters .filter-pill');
+      const cards = document.querySelectorAll('#transformation-grid .case-study-card');
+
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+
+          const filter = pill.getAttribute('data-filter');
+          cards.forEach(card => {
+            const cardType = card.getAttribute('data-media-type');
+            if (filter === 'all' || cardType === filter) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+
+    // Accordion Toggle handler
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const content = item.querySelector('.faq-content');
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+      // Close all other items
+      document.querySelectorAll('.faq-item').forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+          otherItem.querySelector('.faq-content').style.maxHeight = null;
+          otherItem.querySelector('.faq-header').setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      if (!isExpanded) {
+        item.classList.add('active');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        btn.setAttribute('aria-expanded', 'true');
+      } else {
+        item.classList.remove('active');
+        content.style.maxHeight = null;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+  </script>
+</body>
+</html>

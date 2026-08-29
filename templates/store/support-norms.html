@@ -1,0 +1,601 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support &amp; Regulatory Norms | Divya Sanjeevni</title>
+  <meta name="description"
+    content="Review Divya Sanjeevni's operational policies and regulatory norms. Access Shipping Policy, Privacy Guidelines, Terms &amp; Compliance, AYUSH Guidelines, and Riyansh Multitrade Distributor Rules.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+  <style>
+    /* Custom styles for Support & Norms Page */
+    .support-norms-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 3rem;
+      align-items: start;
+      margin-top: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (max-width: 992px) {
+      .support-norms-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    /* Sidebar Navigation */
+    .norms-sidebar {
+      position: sticky;
+      top: calc(var(--header-height) + 20px);
+      background-color: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .norms-sidebar-title {
+      font-size: 1.25rem;
+      color: var(--color-secondary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--color-border);
+      font-family: var(--font-serif);
+      font-weight: 700;
+    }
+
+    .norms-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .norms-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.8rem 1rem;
+      color: var(--color-dark-muted);
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: var(--transition-fast);
+      border-left: 3px solid transparent;
+    }
+
+    .norms-nav-link:hover {
+      background-color: var(--color-bg-warm);
+      color: var(--color-secondary);
+      border-left-color: var(--color-primary-hover);
+    }
+
+    .norms-nav-link.active {
+      background-color: var(--color-accent-translucent);
+      color: var(--color-secondary);
+      font-weight: 600;
+      border-left-color: var(--color-primary);
+    }
+
+    /* Content Cards */
+    .norms-content-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .norm-card {
+      background-color: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+      scroll-margin-top: calc(var(--header-height) + 20px);
+    }
+
+    .norm-card.highlight-flash {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 20px rgba(118, 186, 27, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .norm-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .norm-icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background-color: var(--color-accent-translucent);
+      color: var(--color-primary-hover);
+    }
+
+    .norm-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-secondary);
+      font-family: var(--font-serif);
+      margin: 0;
+    }
+
+    .norm-body p {
+      margin-bottom: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .norm-body h4 {
+      font-size: 1.15rem;
+      color: var(--color-secondary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-family: var(--font-serif);
+    }
+
+    .norm-list {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .norm-list li {
+      color: var(--color-dark-muted);
+      line-height: 1.6;
+    }
+
+    .compliance-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.25rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .compliance-table th, 
+    .compliance-table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .compliance-table th {
+      background-color: var(--color-bg-warm);
+      color: var(--color-secondary);
+      font-weight: 600;
+    }
+
+    .compliance-table tr:hover {
+      background-color: var(--color-bg-warm);
+    }
+  </style>
+</head>
+
+<body class="norms-page">
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header" id="header-container">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo" id="header-logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..."
+              aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu"
+          aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section-padding" style="background-color: var(--color-bg-warm);">
+    <div class="container">
+
+      <!-- Page Hero Header -->
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <span class="eyebrow" id="page-eyebrow">Corporate Policies</span>
+        <h1 class="section-title" id="page-main-heading" style="font-size: 2.75rem;">Support &amp; Regulatory Norms</h1>
+        <p class="section-subtitle" id="page-subheading" style="margin: 0 auto; max-width: 700px;">
+          Divya Sanjeevni works in close coordination with Riyansh Multitrade to maintain regulatory excellence, ethical distribution standards, and clear shipping assurances. Explore our policies below.
+        </p>
+      </div>
+
+      <!-- Main Layout -->
+      <div class="support-norms-layout" id="norms-container-layout">
+
+        <!-- Left Sticky Navigation Sidebar -->
+        <aside class="norms-sidebar" id="sidebar-navigation">
+          <h2 class="norms-sidebar-title">Guidelines Index</h2>
+          <ul class="norms-nav-list" id="sidebar-links-list">
+            <li>
+              <a href="#shipping-policy" class="norms-nav-link" id="nav-link-shipping">
+                <i data-lucide="truck" style="width: 18px; height: 18px;"></i>
+                <span>Shipping Policy</span>
+              </a>
+            </li>
+            <li>
+              <a href="#privacy-guidelines" class="norms-nav-link" id="nav-link-privacy">
+                <i data-lucide="shield" style="width: 18px; height: 18px;"></i>
+                <span>Privacy Guidelines</span>
+              </a>
+            </li>
+            <li>
+              <a href="#terms-compliance" class="norms-nav-link" id="nav-link-terms">
+                <i data-lucide="file-text" style="width: 18px; height: 18px;"></i>
+                <span>Terms &amp; Compliance</span>
+              </a>
+            </li>
+            <li>
+              <a href="#ayush-guidelines" class="norms-nav-link" id="nav-link-ayush">
+                <i data-lucide="award" style="width: 18px; height: 18px;"></i>
+                <span>AYUSH Guidelines</span>
+              </a>
+            </li>
+            <li>
+              <a href="#distributor-rules" class="norms-nav-link" id="nav-link-distributor">
+                <i data-lucide="users" style="width: 18px; height: 18px;"></i>
+                <span>Distributor Rules</span>
+              </a>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Right Side Content Lists -->
+        <div class="norms-content-list" id="norms-content-wrapper">
+
+          <!-- 1. Shipping Policy -->
+          <article class="norm-card" id="shipping-policy">
+            <div class="norm-header">
+              <div class="norm-icon-container"><i data-lucide="truck"></i></div>
+              <h3 class="norm-title">Shipping &amp; Delivery Policy</h3>
+            </div>
+            <div class="norm-body">
+              <p>
+                At Divya Sanjeevni, we are committed to delivering our fresh, potent botanical formulations in perfect condition. We partner with India’s leading domestic couriers to ensure reliable logistics support.
+              </p>
+              
+              <h4>Order Dispatch &amp; Delivery Timelines</h4>
+              <ul class="norm-list">
+                <li><strong>Processing Window:</strong> All orders are verified and packed within 24 to 48 hours of successful payment confirmation.</li>
+                <li><strong>Domestic Shipping:</strong> Orders typically arrive within 3 to 7 business days depending on geographical location. Remote zones or rural districts may require up to 9 business days.</li>
+                <li><strong>Dispatch Notifications:</strong> Once your package is handed over to our courier partners, an SMS and email notification containing the AWB tracking number will be sent.</li>
+              </ul>
+
+              <h4>Rates and Minimum thresholds</h4>
+              <p>
+                Standard domestic shipping is charged at a flat rate of ₹80 for all orders under ₹1,500. Orders totaling ₹1,500 or more qualify for **Free Standard Shipping** nationwide.
+              </p>
+
+              <h4>Damaged or Lost Shipments</h4>
+              <p>
+                In the rare event that your product bottle or container is broken during transport, please take a clear photograph of the damaged item and its packaging immediately. Send the documentation to our help desk at <strong>Divyasanjeevani@gmail.com</strong> within 24 hours of receipt. Verified transit damage will be replaced free of charge.
+              </p>
+            </div>
+          </article>
+
+          <!-- 2. Privacy Guidelines -->
+          <article class="norm-card" id="privacy-guidelines">
+            <div class="norm-header">
+              <div class="norm-icon-container"><i data-lucide="shield"></i></div>
+              <h3 class="norm-title">Data Privacy &amp; Encryption Guidelines</h3>
+            </div>
+            <div class="norm-body">
+              <p>
+                We prioritize user privacy and ensure that all customer and distributor data remains fully protected. This policy explains what information we gather and how we manage it.
+              </p>
+
+              <h4>Information Collected</h4>
+              <p>
+                We collect personal registration details (such as full name, email, phone number, and delivery address) to verify accounts, fulfill retail purchases, and dispatch orders.
+              </p>
+
+              <h4>Transaction Security &amp; Payment Gateway Compliance</h4>
+              <ul class="norm-list">
+                <li><strong>Secure SSL Encryption:</strong> All page sessions, registrations, and transactions run over Secure Socket Layer (SSL) protocol, protecting your details from intercept.</li>
+                <li><strong>Tokenized Payments:</strong> We utilize third-party PCI-DSS compliant payment gateways. No credit card, debit card, or netbanking credentials are stored directly on our servers.</li>
+              </ul>
+
+              <h4>Partnership Data Management</h4>
+              <p>
+                To provide wholesale distribution and track referral points, your transaction details (order total, sales points) are shared securely with the **Riyansh Multitrade** back-office system. We strictly forbid the sale or sharing of user records with external advertising agencies or cold-marketing systems.
+              </p>
+            </div>
+          </article>
+
+          <!-- 3. Terms & Compliance -->
+          <article class="norm-card" id="terms-compliance">
+            <div class="norm-header">
+              <div class="norm-icon-container"><i data-lucide="file-text"></i></div>
+              <h3 class="norm-title">Terms &amp; Corporate Compliance</h3>
+            </div>
+            <div class="norm-body">
+              <p>
+                By accessing this portal, buying retail remedies, or signing up as a distributor, you consent to be bound by the corporate guidelines of Divya Sanjeevni and Riyansh Multitrade.
+              </p>
+
+              <h4>Platform Eligibility</h4>
+              <p>
+                You must be at least 18 years of age to purchase products or register as an authorized distributor. Users are responsible for providing authentic credentials during checkout or dashboard registration.
+              </p>
+
+              <h4>Medical Disclaimer</h4>
+              <p style="border-left: 4px solid var(--color-primary); padding-left: 1rem; font-style: italic; color: var(--color-secondary);">
+                Important: Divya Sanjeevni formulations are natural Ayurvedic supplements. Information provided on this website is intended for educational purposes and is not a substitute for professional medical consultation, diagnosis, or treatment. Always check with your physician before beginning a new dietary regimen.
+              </p>
+
+              <h4>Intellectual Property Rights</h4>
+              <p>
+                All brand identity assets, page layout codes, product design blueprints, clinical study publications, and graphic materials are the exclusive property of Divya Sanjeevni and Riyansh Multitrade. Unauthorized replication of site elements or commercial reuse is subject to legal action.
+              </p>
+            </div>
+          </article>
+
+          <!-- 4. AYUSH Guidelines -->
+          <article class="norm-card" id="ayush-guidelines">
+            <div class="norm-header">
+              <div class="norm-icon-container"><i data-lucide="award"></i></div>
+              <h3 class="norm-title">Ministry of AYUSH Regulatory Alignment</h3>
+            </div>
+            <div class="norm-body">
+              <p>
+                Our botanical formulations are manufactured under strict supervision, ensuring close adherence to the standards set by the **Ministry of AYUSH** (Ayurveda, Yoga &amp; Naturopathy, Unani, Siddha, and Homoeopathy), Government of India.
+              </p>
+
+              <h4>Labeling &amp; Quality Specifications</h4>
+              <ul class="norm-list">
+                <li><strong>Ayurvedic Pharmacopoeia Standards:</strong> All active extracts are standardized as per the guidelines in the Ayurvedic Pharmacopoeia of India (API) to ensure safety.</li>
+                <li><strong>No Miracle Claims:</strong> In accordance with the Drugs and Magic Remedies Act, we do not claim that our wellness supplements offer instant cures for chronic medical illnesses.</li>
+                <li><strong>Certified Manufacturing:</strong> Production lines hold Good Manufacturing Practices (GMP) and ISO 9001:2015 certifications, assuring clean processing environments.</li>
+              </ul>
+
+              <h4>Certification Reference Table</h4>
+              <table class="compliance-table">
+                <thead>
+                  <tr>
+                    <th>Norm Category</th>
+                    <th>Standard Regulatory Compliance</th>
+                    <th>Audit Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Manufacturing Quality</td>
+                    <td>GMP (Good Manufacturing Practices)</td>
+                    <td>Certified &amp; Approved</td>
+                  </tr>
+                  <tr>
+                    <td>Safety Standards</td>
+                    <td>ISO 9001:2015 Quality Management</td>
+                    <td>Active Certification</td>
+                  </tr>
+                  <tr>
+                    <td>Ad Claims</td>
+                    <td>ASCI &amp; Ministry of AYUSH Advertising Code</td>
+                    <td>Fully Compliant</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 5. Distributor Rules -->
+          <article class="norm-card" id="distributor-rules">
+            <div class="norm-header">
+              <div class="norm-icon-container"><i data-lucide="users"></i></div>
+              <h3 class="norm-title">Riyansh Multitrade Distributor Rules</h3>
+            </div>
+            <div class="norm-body">
+              <p>
+                Authorized independent distributors represent the core of the Divya Sanjeevni network. To maintain a fair and professional environment, all partners must adhere to these Distributor Rules of Conduct.
+              </p>
+
+              <h4>Resell Price Protections (MRP vs. DP)</h4>
+              <p>
+                Distributors purchase products at the wholesale **Distributor Price (DP)** and must market products to consumers at the official **Maximum Retail Price (MRP)**. Under-cutting the MRP on open market channels, third-party shopping sites, or bidding platforms is strictly prohibited and constitutes grounds for account termination.
+              </p>
+
+              <h4>Ethical Marketing &amp; Claim Compliance</h4>
+              <ul class="norm-list">
+                <li><strong>No Deceptive Claims:</strong> Distributors must present product benefits using official product descriptions. Do not claim that supplements can prevent, diagnose, or cure critical health issues.</li>
+                <li><strong>Realistic Compensation Representation:</strong> When introducing new prospective members to Riyansh Multitrade, clearly state that earnings depend on sales volume, product kits activated, and team matching points. Do not guarantee passive income without sales activity.</li>
+              </ul>
+
+              <h4>Policy Infractions &amp; Termination</h4>
+              <p>
+                Compliance audits are run periodically. If a distributor is found cross-selling, violating pricing guidelines, or distributing counterfeit items, their corporate dashboard and accumulated sales points will be suspended indefinitely.
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Brand Details -->
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh
+            Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Support links -->
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Newsletter -->
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form"
+            onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required
+              aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. |
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lucide Icon Setup -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Toggle menu functionality for mobile screens
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('menu-toggle-btn');
+      const menu = document.getElementById('navigation-menu');
+      if (toggleBtn && menu) {
+        toggleBtn.addEventListener('click', () => {
+          const isActive = menu.classList.toggle('active');
+          toggleBtn.setAttribute('aria-expanded', isActive);
+        });
+      }
+    });
+
+    // Hash Scroll and Highlight Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const links = document.querySelectorAll('.norms-nav-link');
+      const cards = document.querySelectorAll('.norm-card');
+
+      function handleHashChange() {
+        const hash = window.location.hash || '#shipping-policy';
+        
+        // Remove active class from all nav links
+        links.forEach(link => {
+          if (link.getAttribute('href') === hash) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+
+        // Scroll to the card with flash highlighting
+        const targetCard = document.querySelector(hash);
+        if (targetCard) {
+          // Remove highlight class from all cards
+          cards.forEach(card => card.classList.remove('highlight-flash'));
+          
+          // Scroll smoothly
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          
+          // Add temporary flash class
+          targetCard.classList.add('highlight-flash');
+          setTimeout(() => {
+            // Leave a subtle trace or remove flash highlight
+            // Let's keep it highlighted for 1.5 seconds, then keep a lighter active state
+          }, 1500);
+        }
+      }
+
+      // Handle sidebar link clicks
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetHash = link.getAttribute('href');
+          history.pushState(null, null, targetHash);
+          handleHashChange();
+        });
+      });
+
+      // Listen for initial load and hashchange
+      window.addEventListener('hashchange', handleHashChange);
+      
+      // Delay slightly for render and asset loading
+      setTimeout(handleHashChange, 200);
+    });
+  </script>
+</body>
+
+</html>

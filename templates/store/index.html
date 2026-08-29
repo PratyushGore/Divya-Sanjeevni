@@ -1,0 +1,401 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divya Sanjeevni - Ayurvedic Wellness | Partnered with Riyansh Multitrade</title>
+  <meta name="description"
+    content="Rejuvenate yourself with soulful healing. We harvest raw, potent botanicals to restore your inner balance and physical vitality.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+
+<body class="home-page">
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo" id="header-logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link active">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..."
+              aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu"
+          aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         HERO SECTION (Full Screen Banner)
+         ========================================== -->
+    <section class="hero-full-screen">
+      <picture>
+        <source media="(max-width: 768px)" srcset="{% static 'images/hero mobile view.png' %}">
+        <img src="{% static 'images/Ayurveda.png' %}" alt="Divya Sanjeevni - Ayurveda Products and Remedies"
+          class="hero-full-image">
+      </picture>
+      <div class="hero-overlay-content">
+        <a href="{% url 'products' %}" class="btn btn-primary hero-explore-btn">Explore Products</a>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CATEGORY HIGHLIGHT SECTION
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-white);">
+      <div class="container">
+        <div class="grid-2" style="gap: 3rem;">
+          <div>
+            <span class="eyebrow">Natural Therapeutics</span>
+            <h2 class="section-title">Time-Tested Wellness Categories</h2>
+            <p style="margin-bottom: 1.5rem;">
+              We harmonize centuries-old Ayurvedic traditions with modern quality benchmarks to bring you premium
+              formulations targeted for long-term health.
+            </p>
+            <ul class="feature-list" id="category-feature-list">
+              <li>
+                <i data-lucide="check-circle-2" class="feature-list-icon"></i>
+                <div>
+                  <strong>Health Juices &amp; Tonics:</strong> Pure extracts for metabolic support, liver detox, and gut
+                  healing.
+                </div>
+              </li>
+              <li>
+                <i data-lucide="check-circle-2" class="feature-list-icon"></i>
+                <div>
+                  <strong>Wellness Supplements:</strong> Standardized capsules rich in bioactive alkaloids to build
+                  vital immunity.
+                </div>
+              </li>
+              <li>
+                <i data-lucide="check-circle-2" class="feature-list-icon"></i>
+                <div>
+                  <strong>Herbal Oils &amp; Skincare:</strong> Nutrient-dense extracts formulated to heal from within.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="hero-image-container" style="aspect-ratio: 4/3;">
+            <img src="/media/herbs.webp" alt="Natural wellness lifestyle with herbs">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CALL-TO-ACTION BANNER
+         ========================================== -->
+    <section class="cta-banner"
+      style="background-image: url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=1400&q=80');">
+      <div class="cta-banner-content container">
+        <span class="eyebrow" style="color: var(--color-primary);">Begin Your Transformation</span>
+        <h2>Unlock Organic Health &amp; Financial Freedom Today</h2>
+        <p>
+          Consult with our botanical specialists for custom therapies, or join the Riyansh Multitrade distribution
+          network to share wellness and earn.
+        </p>
+        <div class="cta-buttons">
+          <a href="{% url 'products' %}" class="btn btn-primary">Explore Products</a>
+          <a href="{% url 'business' %}" class="btn btn-outline-white">Become a Distributor</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         "WHY CHOOSE US" SECTION (4-Column Grid)
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-bg-warm);">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <span class="eyebrow">The Divya Sanjeevni Promise</span>
+          <h2 class="section-title">Pioneering Pure Wellness Standards</h2>
+        </div>
+        <div class="grid-4" id="why-choose-grid">
+          <div class="value-card">
+            <i data-lucide="award" class="value-icon"></i>
+            <h3>ISO &amp; Ayush Certified</h3>
+            <p>Conforms to global ISO 9001:2015 and rigid Ministry of AYUSH Quality Guidelines for standard safety.</p>
+          </div>
+          <div class="value-card">
+            <i data-lucide="trending-down" class="value-icon"></i>
+            <h3>Distributor Prices</h3>
+            <p>Direct farm sourcing lets us supply premium wellness products at up to 25% off retail MRP.</p>
+          </div>
+          <div class="value-card">
+            <i data-lucide="users-2" class="value-icon"></i>
+            <h3>10 Lakh+ Trusted</h3>
+            <p>A flourishing community of over 10 Lakh customers and distributors across the country.</p>
+          </div>
+          <div class="value-card">
+            <i data-lucide="flask-conical" class="value-icon"></i>
+            <h3>Science Backed</h3>
+            <p>Ancient Vedic recipes refined under advanced cold extraction keeping molecules intact.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         "ABOUT THE FOUNDER" SECTION
+         ========================================== -->
+    <section class="section-padding founder-section">
+      <div class="container">
+        <div class="founder-grid">
+          <div class="founder-img-box">
+            <img src="{% static 'images/pradnya_gore.jpg' %}" alt="Pradnya Gore, Owner of Divya Sanjeevni">
+          </div>
+          <div class="founder-content">
+            <span class="eyebrow">About me</span>
+            <h3>Pradnya Gore</h3>
+            <div class="founder-role">Owner &amp; Chief Wellness Advisor</div>
+            <p class="founder-quote">
+              "Ayurveda is not merely a treatment method; it is a holistic lifestyle. Our collaboration with Riyansh
+              Multitrade allows us to bridge ancient biological wisdom with modern distribution pipelines, empowering
+              every household to access pure health."
+            </p>
+            <p style="margin-bottom: 1.5rem;">
+              With over two decades of dedicated pharmaceutical exploration and traditional training in botanical
+              therapeutics, our mission is to eliminate toxic synthetics from daily health routines.
+            </p>
+            <a href="{% url 'contact' %}" class="btn btn-outline-dark">Book Consultation</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         FEATURED PRODUCTS PREVIEW (4-Column)
+         ========================================== -->
+    <section class="section-padding" style="background-color: var(--color-white);">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem;">
+          <div>
+            <span class="eyebrow">Selected Remides</span>
+            <h2 class="section-title" style="margin-bottom: 0;">Featured Catalog</h2>
+          </div>
+          <a href="{% url 'products' %}" class="btn btn-outline-dark"
+            style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+            View All Catalog
+          </a>
+        </div>
+
+        <div class="product-grid" id="featured-products-container">
+          {% if featured_products %}
+          {% for product in featured_products %}
+          <div class="product-card" data-product-id="{{ product.id }}">
+            {% if product.is_featured %}
+            <span class="badge badge-featured">Featured</span>
+            {% elif product.is_in_stock %}
+            <span class="badge badge-in-stock">In Stock</span>
+            {% endif %}
+            <a href="{% url 'product_detail' product.slug %}" class="product-image-box">
+              {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.title }}">
+              {% else %}
+              <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder image">
+              {% endif %}
+            </a>
+            <div class="product-card-body">
+              <span class="category-tag">{{ product.category.name|default:"Ayurvedic Formula" }}</span>
+              <h4 class="product-title">
+                <a href="{% url 'product_detail' product.slug %}">{{ product.title }}</a>
+              </h4>
+              <div class="rating-stars" aria-label="5 out of 5 stars">
+                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i
+                  data-lucide="star"></i><i data-lucide="star"></i>
+              </div>
+              <div class="price-row">
+                <span class="current-price">₹{{ product.sale_price|default:product.regular_price }}</span>
+                {% if product.sale_price %}
+                <span class="price-old">₹{{ product.regular_price }}</span>
+                {% endif %}
+              </div>
+              <a href="{% url 'contact' %}?product={{ product.slug }}" class="btn-inquire">Inquire Now</a>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div class="empty-catalog-message" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; background: var(--color-bg-warm); border-radius: 12px; border: 1px dashed rgba(0,0,0,0.1); width: 100%;">
+            <i data-lucide="shopping-bag" style="width: 48px; height: 48px; color: var(--color-primary); margin-bottom: 1rem; opacity: 0.7; display: inline-block;"></i>
+            <p style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--color-secondary); margin-bottom: 0.5rem; font-weight: 600;">No Featured Remedies</p>
+            <p style="font-size: 0.95rem; color: var(--color-dark-muted); max-width: 450px; margin: 0 auto;">We are currently updating our featured catalog. Please check out our full range of products below.</p>
+            <a href="{% url 'products' %}" class="btn btn-outline-dark" style="margin-top: 1.25rem; display: inline-block; font-size: 0.9rem; padding: 0.5rem 1.5rem;">Explore All Products</a>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+    <!-- ==========================================
+         TESTIMONIALS & STATS COUNTER
+         ========================================== -->
+    <section class="section-padding impact-section" style="background-color: var(--color-bg-warm);">
+      <div class="container">
+        <div class="testimonial-row">
+          <!-- Left side: Stats green container -->
+          <div class="testimonial-card-left">
+            <h3>Verified Efficacy &amp; Impact</h3>
+            <p>We are dedicated to scaling genuine wellness pathways through sustainable direct B2B marketing grids.</p>
+            <div class="testimonial-stats">
+              <div class="stat-item">
+                <h4>10 Lakh+</h4>
+                <p>Happy Partners</p>
+              </div>
+              <div class="stat-item">
+                <h4>100+</h4>
+                <p>Retail Outlets</p>
+              </div>
+              <div class="stat-item">
+                <h4>99.2%</h4>
+                <p>Pure Bio-Extracts</p>
+              </div>
+              <div class="stat-item">
+                <h4>ISO Certified</h4>
+                <p>Standards Compliant</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Quote block -->
+          <div class="testimonial-card-right">
+            <i data-lucide="quote" class="quote-icon"></i>
+            <p class="testimonial-text">
+              "The Amrit juice and Brightening Serum transformed my daily routine. My energy levels peaked and skin
+              blemishes faded significantly in weeks. The Riyansh distribution network also provides an incredible
+              earnings platform."
+            </p>
+            <div class="author-block">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80"
+                alt="Customer review avatar" class="author-img">
+              <div class="author-info">
+                <h5>Pankaj Gore</h5>
+                <p>Verified Distributor, Mumbai, Boisar</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Brand Details -->
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh
+            Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Support links -->
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Newsletter -->
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form"
+            onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required
+              aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. |
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lucide Icon Setup -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Toggle menu functionality for mobile screens
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('menu-toggle-btn');
+      const menu = document.getElementById('navigation-menu');
+      if (toggleBtn && menu) {
+        toggleBtn.addEventListener('click', () => {
+          const isActive = menu.classList.toggle('active');
+          toggleBtn.setAttribute('aria-expanded', isActive);
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

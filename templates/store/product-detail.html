@@ -1,0 +1,493 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if product %}{{ product.title }}{% else %}Product Details{% endif %} | Divya Sanjeevni</title>
+  <meta name="description" content="View ingredients, dosage, and health benefits of our premium Ayurvedic remedies.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+<body>
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+      
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link active">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..." aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section-padding">
+    <div class="container">
+      
+      <!-- Check if rendered with Django Product context -->
+      {% if product %}
+        <div class="detail-container">
+          
+          <!-- Left Grid Column: Image Gallery -->
+          <div>
+            <div class="gallery-large">
+              {% if product.image %}
+                <img id="main-gallery-img" src="{{ product.image.url }}" alt="{{ product.title }}">
+              {% else %}
+                <img id="main-gallery-img" src="{% static 'images/placeholder.jpg' %}" alt="Placeholder image">
+              {% endif %}
+            </div>
+            <!-- Sub-thumbnails strip -->
+            <div class="gallery-thumbnails">
+              {% if product.image %}
+                <button class="thumb-btn active" onclick="updateMainImage('{{ product.image.url }}', this)">
+                  <img src="{{ product.image.url }}" alt="Primary view">
+                </button>
+              {% else %}
+                <button class="thumb-btn active" onclick="updateMainImage('{% static 'images/placeholder.jpg' %}', this)">
+                  <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder">
+                </button>
+              {% endif %}
+              {% if product.image_2 %}
+                <button class="thumb-btn" onclick="updateMainImage('{{ product.image_2.url }}', this)">
+                  <img src="{{ product.image_2.url }}" alt="Second view">
+                </button>
+              {% endif %}
+              {% if product.image_3 %}
+                <button class="thumb-btn" onclick="updateMainImage('{{ product.image_3.url }}', this)">
+                  <img src="{{ product.image_3.url }}" alt="Third view">
+                </button>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Right Grid Column: Product Information -->
+          <div class="product-detail-info">
+            <div class="detail-meta-row">
+              {% if product.is_in_stock %}
+                <span class="stock-badge">In Stock</span>
+              {% endif %}
+              <span class="category-tag" style="margin-bottom: 0;">{{ product.category.name }}</span>
+            </div>
+            
+            <h1 style="font-size: 2.25rem; color: var(--color-secondary); font-family: var(--font-serif); margin-bottom: 0.75rem;">
+              {{ product.title }}
+            </h1>
+
+            <div class="detail-price-row">
+              <span>₹{{ product.sale_price|default:product.regular_price }}</span>
+              {% if product.sale_price %}
+                <span class="detail-price-old">₹{{ product.regular_price }}</span>
+              {% endif %}
+            </div>
+
+            <p class="detail-description">
+              {{ product.description }}
+            </p>
+
+            <a href="{% url 'contact' %}?product={{ product.slug }}" class="btn btn-primary" style="margin-bottom: 2rem; width: fit-content;">
+              Inquire / Contact Us
+              <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+            </a>
+
+            <!-- Bottom Tabs Component -->
+            <div class="tab-section" style="margin-top: 1.5rem;">
+              <nav class="tab-nav">
+                <button class="tab-link active" onclick="openTab(event, 'ingred-tab')">Key Ingredients</button>
+                <button class="tab-link" onclick="openTab(event, 'benefits-tab')">Health Benefits</button>
+                <button class="tab-link" onclick="openTab(event, 'usage-tab')">Dosage &amp; Usage</button>
+              </nav>
+
+              <div id="ingred-tab" class="tab-panel active">
+                <p>Formulated with pure active herbal extracts balanced according to ancient Vedic scriptures:</p>
+                <ul style="padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                  <li><strong>Organic Active Extract:</strong> Standardized compounds to maximize cellular absorption.</li>
+                  <li><strong>Natural Stabilizers:</strong> Free from heavy metals, synthetic parabens, and additives.</li>
+                  <li><strong>Traditional Carrier (Anupana):</strong> Formulated to support digestive metabolism.</li>
+                </ul>
+              </div>
+
+              <div id="benefits-tab" class="tab-panel">
+                <p>Consistent daily intake offers the following proven physiological benefits:</p>
+                <ul style="padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                  <li>Supports cellular detoxification and metabolic cleansing.</li>
+                  <li>Boosts daily energy reserves and natural immune response.</li>
+                  <li>Soothes systemic inflammation and promotes organic balance.</li>
+                </ul>
+              </div>
+
+              <div id="usage-tab" class="tab-panel">
+                <p>Directions to achieve optimal health results:</p>
+                <ul style="padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                  <li>Take 1-2 doses daily, preferably before meals or on an empty stomach.</li>
+                  <li>Consume with warm water or milk as directed by a wellness advisor.</li>
+                  <li>Consult a certified Divya Sanjeevni practitioner for specialized dosages.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Products Section -->
+        {% if related_products %}
+          <section style="margin-top: 4.5rem; border-top: 1px solid var(--color-border); padding-top: 3rem;">
+            <h2 class="section-title" style="font-size: 1.85rem; margin-bottom: 2rem;">Related Remedies</h2>
+            <div class="product-grid">
+              {% for related in related_products %}
+                <div class="product-card">
+                  {% if related.is_in_stock %}
+                    <span class="badge badge-in-stock">In Stock</span>
+                  {% endif %}
+                  <a href="{% url 'product_detail' related.slug %}">
+                    <div class="product-image-box">
+                      {% if related.image %}
+                        <img src="{{ related.image.url }}" alt="{{ related.title }}">
+                      {% else %}
+                        <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder">
+                      {% endif %}
+                    </div>
+                  </a>
+                  <div class="product-card-body">
+                    <span class="category-tag">{{ related.category.name }}</span>
+                    <h4 class="product-title">
+                      <a href="{% url 'product_detail' related.slug %}">{{ related.title }}</a>
+                    </h4>
+                    <div class="rating-stars">
+                      <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                    </div>
+                    <div class="price-row">
+                      <span class="current-price">₹{{ related.sale_price|default:related.regular_price }}</span>
+                    </div>
+                    <a href="{% url 'contact' %}?product={{ related.slug }}" class="btn-inquire">Inquire Now</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+
+      {% else %}
+        <!-- Fallback static preview for file-system or local preview port 3000 -->
+        <div class="detail-container">
+          <div>
+            <div class="gallery-large">
+              <img id="fallback-main-img" src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80" alt="Product Image">
+            </div>
+            <div class="gallery-thumbnails" id="fallback-thumbs">
+              <!-- Dynamically populated by JS fallback below -->
+            </div>
+          </div>
+
+          <div class="product-detail-info">
+            <div class="detail-meta-row">
+              <span class="stock-badge">IN STOCK</span>
+              <span class="category-tag" id="fallback-category" style="margin-bottom: 0;">Remedy</span>
+            </div>
+            
+            <h1 id="fallback-title" style="font-size: 2.25rem; color: var(--color-secondary); font-family: var(--font-serif); margin-bottom: 0.75rem;">
+              Ayurvedic Remedy
+            </h1>
+
+            <div class="detail-price-row" id="fallback-price-row">
+              <span>₹1,100</span>
+            </div>
+
+            <p class="detail-description" id="fallback-desc">
+              Loading remedy details...
+            </p>
+
+            <a href="{% url 'contact' %}" id="fallback-contact-link" class="btn btn-primary" style="margin-bottom: 2rem; width: fit-content;">
+              Inquire / Contact Us
+              <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+            </a>
+
+            <!-- Tabs -->
+            <div class="tab-section" style="margin-top: 1.5rem;">
+              <nav class="tab-nav">
+                <button class="tab-link active" onclick="openTab(event, 'fallback-ingred-tab')">Key Ingredients</button>
+                <button class="tab-link" onclick="openTab(event, 'fallback-benefits-tab')">Health Benefits</button>
+                <button class="tab-link" onclick="openTab(event, 'fallback-usage-tab')">Dosage &amp; Usage</button>
+              </nav>
+
+              <div id="fallback-ingred-tab" class="tab-panel active">
+                <p>Potent ingredients balanced under traditional recipes:</p>
+                <ul id="fallback-ingred-list" style="padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                </ul>
+              </div>
+
+              <div id="fallback-benefits-tab" class="tab-panel">
+                <p>This Ayurvedic formulation is scientifically proven to:</p>
+                <ul style="padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                  <li>Restore inner cellular balance and metabolic speed.</li>
+                  <li>Alleviate inflammatory symptoms without gastric distress.</li>
+                  <li>Support organic liver detoxification cycles.</li>
+                </ul>
+              </div>
+
+              <div id="fallback-usage-tab" class="tab-panel">
+                <p>Usage directions to achieve optimal absorption:</p>
+                <ul id="fallback-usage-list" style="padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. | 
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Tab Switcher Logic
+    function openTab(evt, tabId) {
+      // Find current tab panel parent (scope searches in case of fallback vs live)
+      const container = evt.currentTarget.closest('.tab-section');
+      const links = container.querySelectorAll('.tab-link');
+      const panels = container.querySelectorAll('.tab-panel');
+
+      links.forEach(link => link.classList.remove('active'));
+      panels.forEach(panel => panel.classList.remove('active'));
+
+      evt.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // Gallery Changer for Live Django Context
+    function updateMainImage(src, btn) {
+      if (!src) return;
+      document.getElementById('main-gallery-img').src = src;
+      const thumbs = btn.parentElement.querySelectorAll('.thumb-btn');
+      thumbs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Static Previews Fallback Mechanism
+    const DEMO_PRODUCTS = {
+      'prod-1': {
+        title: 'Organic Herbal Immunity Tea',
+        category: 'Teas & Infusions',
+        price: '₹999',
+        oldPrice: '₹1,299',
+        image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80',
+        thumbs: [
+          'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=200&q=80',
+        ],
+        description: 'A premium immunity-boosting blend of certified organic herbs including Tulsi, Ginger, Giloy, and Amla. Clinically tested under GMP standards to support respiratory health, digestive balance, and immune system resilience.',
+        ingredients: [
+          { name: 'Tulsi (Holy Basil)', benefit: 'Natural anti-inflammatory and respiratory support herb.' },
+          { name: 'Giloy Extract', benefit: 'Immunomodulator proven to enhance white blood cell activity.' },
+          { name: 'Amla & Ginger', benefit: 'Rich Vitamin C source with gut-soothing anti-nausea properties.' },
+        ],
+        usage: ['Steep one teabag in 200ml hot water for 5-7 minutes.', 'Drink 2 cups daily - morning on empty stomach and before sleep.', 'Consult a certified Divya Sanjeevni advisor for specific therapeutic dosages.'],
+      },
+      'prod-2': {
+        title: 'Active Brightening Facial Serum',
+        category: 'Skincare',
+        price: '₹1,799',
+        image: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=800&q=80',
+        thumbs: [
+          'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1522337360788-8b13edd793be?auto=format&fit=crop&w=200&q=80',
+        ],
+        description: 'Botanical serum formulated with Kumkumadi oil, Saffron extract, and Vitamin C derivatives to reduce dark spots, hyperpigmentation, and uneven skin tone.',
+        ingredients: [
+          { name: 'Kumkumadi Oil', benefit: 'Ancient Ayurvedic complex that enhances natural radiance.' },
+          { name: 'Saffron Extract', benefit: 'Potent antioxidant that reduces melanin production and blemishes.' },
+          { name: 'Vitamin C Derivatives', benefit: 'Helps stimulate collagen synthesis and neutralize skin free radicals.' },
+        ],
+        usage: ['Apply 3-4 drops on cleansed, toned skin every night.', 'Gently press into skin using upward circular massaging motions.', 'Follow with a moisturizer. Use SPF during the day.'],
+      },
+      'prod-3': {
+        title: 'Calming Lavender Essential Oil',
+        category: 'Essential Oils',
+        price: '₹749',
+        oldPrice: '₹999',
+        image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80',
+        thumbs: [
+          'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=200&q=80',
+        ],
+        description: 'Pure steam-distilled Lavender essential oil from organically grown Bulgarian lavender fields. Aromatherapy grade - proven to reduce cortisol levels, improve sleep latency, and relieve tension headaches.',
+        ingredients: [
+          { name: 'Bulgarian Lavender', benefit: 'Highest purity concentration for maximum calming effects.' },
+          { name: 'Linalool & Linalyl Acetate', benefit: 'Active compounds with scientifically proven anxiolytic activity.' },
+          { name: 'Jojoba Oil Base', benefit: 'Carrier oil that absorbs quickly without clogging pores.' },
+        ],
+        usage: ['Diffuse 4-6 drops in an ultrasonic diffuser for 30-60 minutes before sleep.', 'Dilute 2-3 drops in carrier oil and massage onto temples or wrists.', 'Add 5 drops to a warm bath for a relaxing experience.'],
+      },
+      'prod-4': {
+        title: 'Mineral Detox Clay Mask',
+        category: 'Skincare',
+        price: '₹1,149',
+        image: 'https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=800&q=80',
+        thumbs: [
+          'https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=200&q=80',
+          'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=200&q=80',
+        ],
+        description: 'Deep-pore purifying Kaolin and Bentonite clay mask enriched with Neem extract, Tea Tree oil, and Activated Charcoal. Clinically formulated to draw out impurities, tighten pores, and rebalance skin sebum.',
+        ingredients: [
+          { name: 'Kaolin & Bentonite Clay', benefit: 'Deep-cleanses pores and absorbs excess sebum and toxins.' },
+          { name: 'Neem Extract', benefit: 'Natural antibacterial agent that prevents acne breakouts.' },
+          { name: 'Activated Charcoal', benefit: 'Binds to pollutants and heavy metals for deep detoxification.' },
+        ],
+        usage: ['Apply a thin even layer to cleansed face, avoiding the eye area.', 'Leave on for 10-15 minutes until dry.', 'Rinse with warm water. Use 2-3 times per week.'],
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if fallback block is present
+      const fallbackContainer = document.getElementById('fallback-title');
+      if (!fallbackContainer) return; // Django template is running, ignore fallback loader
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || 'prod-1';
+      const p = DEMO_PRODUCTS[id] || DEMO_PRODUCTS['prod-1'];
+
+      // Populate static fields
+      document.title = p.title + ' | Divya Sanjeevni';
+      document.getElementById('fallback-main-img').src = p.image;
+      document.getElementById('fallback-category').textContent = p.category;
+      document.getElementById('fallback-title').textContent = p.title;
+
+      // Price Row
+      const priceRow = document.getElementById('fallback-price-row');
+      priceRow.innerHTML = `<span>${p.price}</span> ${p.oldPrice ? `<span class="detail-price-old">${p.oldPrice}</span>` : ''}`;
+
+      // Description
+      document.getElementById('fallback-desc').textContent = p.description;
+
+      // Contact Form Link
+      document.getElementById('fallback-contact-link').href = `{% url 'contact' %}?product=${encodeURIComponent(p.title)}`;
+
+      // Thumbnails
+      const thumbsContainer = document.getElementById('fallback-thumbs');
+      thumbsContainer.innerHTML = p.thumbs.map((src, idx) => `
+        <button class="thumb-btn ${idx === 0 ? 'active' : ''}" onclick="updateFallbackImage('${src}', this)">
+          <img src="${src}" alt="Thumbnail ${idx + 1}">
+        </button>
+      `).join('');
+
+      // Ingredients
+      const ingredList = document.getElementById('fallback-ingred-list');
+      ingredList.innerHTML = p.ingredients.map(i => `
+        <li><strong>${i.name}:</strong> ${i.benefit}</li>
+      `).join('');
+
+      // Usage
+      const usageList = document.getElementById('fallback-usage-list');
+      usageList.innerHTML = p.usage.map(u => `
+        <li>${u}</li>
+      `).join('');
+    });
+
+    function updateFallbackImage(src, btn) {
+      document.getElementById('fallback-main-img').src = src;
+      const thumbs = btn.parentElement.querySelectorAll('.thumb-btn');
+      thumbs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

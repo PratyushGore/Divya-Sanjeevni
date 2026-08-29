@@ -1,0 +1,338 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us &amp; Consultations | Divya Sanjeevni</title>
+  <meta name="description"
+    content="Reach out to Divya Sanjeevni and Riyansh Multitrade. Register for Ayurvedic consultations or inquire about wholesale distribution.">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       GLOBAL HEADER & NAVIGATION
+       ========================================== -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="logo">
+        <i data-lucide="leaf" class="logo-icon"></i>
+        <span>Divya Sanjeevni</span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu" id="navigation-menu">
+          <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+          <li><a href="{% url 'results' %}" class="nav-link">Results</a></li>
+          <li><a href="{% url 'business' %}" class="nav-link">Business</a></li>
+          <li><a href="{% url 'contact' %}" class="nav-link active">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="{% url 'search' %}" method="get" class="nav-search-form">
+          <div class="nav-search-capsule">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" name="q" class="nav-search-input" id="search-input" placeholder="Search results..."
+              aria-label="Search results">
+          </div>
+        </form>
+        <button class="action-btn mobile-toggle" id="menu-toggle-btn" aria-label="Toggle Navigation Menu"
+          aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section-padding">
+    <div class="container">
+
+      <!-- Page Title -->
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <span class="eyebrow">Connect With Us</span>
+        <h1 class="section-title" style="font-size: 2.5rem;">Get In Touch</h1>
+        <p class="section-subtitle" style="margin: 0 auto; max-width: 600px;">
+          Whether you want support with wholesale distribution, have a scientific query about active extracts, or want
+          to consult an Ayurvedic advisor.
+        </p>
+      </div>
+
+      <!-- Contact Layout -->
+      <div class="contact-layout">
+
+        <!-- Left Side: Detail Cards & Google Map -->
+        <div>
+          <!-- Card 1: Phone -->
+          <div class="contact-card-item">
+            <div class="contact-card-icon">
+              <i data-lucide="phone"></i>
+            </div>
+            <div class="contact-card-details">
+              <h4>Telephone Support</h4>
+              <p>+91 9860348792</p>
+              <p style="font-size: 0.8rem; color: var(--color-dark-muted);">Mon-Sat 9:00 AM - 6:00 PM IST</p>
+            </div>
+          </div>
+
+          <!-- Card 2: Email -->
+          <div class="contact-card-item">
+            <div class="contact-card-icon">
+              <i data-lucide="mail"></i>
+            </div>
+            <div class="contact-card-details">
+              <h4>Email Inquiries</h4>
+              <p>Divyasanjeevani@gmail.com</p>
+              <p style="font-size: 0.8rem; color: var(--color-dark-muted);">We reply within 7 business days.</p>
+            </div>
+          </div>
+
+          <!-- Card 3: Location -->
+          <div class="contact-card-item">
+            <div class="contact-card-icon">
+              <i data-lucide="map-pin"></i>
+            </div>
+            <div class="contact-card-details">
+              <h4>Riyansh Corporate Outlet</h4>
+              <p>A-104, ShivPriya Appartment, Somnath Paradise, BOisar. (W) - 401501</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Side: Contact Form -->
+        <div class="contact-form-container">
+          <h3 style="font-size: 1.6rem; color: var(--color-secondary); margin-bottom: 0.5rem;">Send A Message</h3>
+          <p style="color: var(--color-dark-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+            Fill out this form and we will forward it to the appropriate wellness specialist.
+          </p>
+
+          <form id="contact-form" novalidate>
+            {% csrf_token %}
+
+            <!-- Form Status Alert banner -->
+            <div class="form-status-alert" id="status-banner"></div>
+
+            <!-- Full Name input -->
+            <div class="form-group">
+              <label for="id_full_name" class="form-label">Full Name *</label>
+              <input type="text" id="id_full_name" name="full_name" class="form-control" placeholder="John Doe"
+                required>
+              <span class="form-feedback" id="feedback_full_name">Name is required.</span>
+            </div>
+
+            <!-- Email Address input -->
+            <div class="form-group">
+              <label for="id_email" class="form-label">Email Address *</label>
+              <input type="email" id="id_email" name="email" class="form-control" placeholder="john@example.com"
+                required>
+              <span class="form-feedback" id="feedback_email">Provide a valid email.</span>
+            </div>
+
+            <!-- Subject input -->
+            <div class="form-group">
+              <label for="id_subject" class="form-label">Subject *</label>
+              <input type="text" id="id_subject" name="subject" class="form-control"
+                placeholder="e.g. Order inquiry / Consultation request" required>
+              <span class="form-feedback" id="feedback_subject">Subject is required.</span>
+            </div>
+
+            <!-- Message Textbox -->
+            <div class="form-group">
+              <label for="id_message" class="form-label">Your Message *</label>
+              <textarea id="id_message" name="message" class="form-control" rows="6"
+                placeholder="Describe your query in detail..." required style="resize: vertical;"></textarea>
+              <span class="form-feedback" id="feedback_message">Message is required.</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+              Send Message
+              <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       GLOBAL FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="{% url 'home' %}" class="logo" style="color: var(--color-white); margin-bottom: 1rem;">
+            <i data-lucide="leaf" style="color: var(--color-primary);"></i>
+            <span>Divya Sanjeevni</span>
+          </a>
+          <p class="footer-desc">
+            Pioneering premium organic wellness formulations and holistic Vedic remedies partnered with Riyansh
+            Multitrade. Ethically sourced, scientifically verified.
+          </p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/19Sh2FNJWQ/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/divyasanjeevani?igsh=ZmlvdWlubWV5bXhv" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@pradnyagore-fj3sg" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'products' %}">Products Catalog</a></li>
+            <li><a href="{% url 'results' %}">Results &amp; Proof</a></li>
+            <li><a href="{% url 'business' %}">Business B2B</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Support &amp; Norms</h3>
+          <ul class="footer-links">
+            <li><a href="{% url 'support_norms' %}#shipping-policy">Shipping Policy</a></li>
+            <li><a href="{% url 'support_norms' %}#privacy-guidelines">Privacy Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#terms-compliance">Terms &amp; Compliance</a></li>
+            <li><a href="{% url 'support_norms' %}#ayush-guidelines">AYUSH Guidelines</a></li>
+            <li><a href="{% url 'support_norms' %}#distributor-rules">Distributor Rules</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Join The Newsletter</h3>
+          <p class="footer-desc" style="margin-top: 0;">
+            Subscribe to receive organic wellness articles, herbal guides, and exclusive retail discount alerts.
+          </p>
+          <form class="newsletter-form"
+            onsubmit="event.preventDefault(); alert('Subscribed successfully!'); this.reset();">
+            <input type="email" placeholder="Your Email Address" class="newsletter-input" required
+              aria-label="Newsletter email input">
+            <button type="submit" class="newsletter-btn">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Divya Sanjeevni &amp; Riyansh Multitrade. All rights reserved. |
+          <a href="{% url 'admin_dashboard' %}" class="admin-link">Admin Portal</a>
+        </p>
+        <p>Ancient Ayurveda Driven by Science</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Pre-fill Query Parameters (Auto-select product subject)
+      const params = new URLSearchParams(window.location.search);
+      const productSlug = params.get('product');
+      const subjectInput = document.getElementById('id_subject');
+
+      if (productSlug && subjectInput) {
+        // Beautify the slug for display
+        const beautified = productSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        subjectInput.value = `Inquiry about ${beautified}`;
+      }
+
+      // 2. AJAX Submission Handler
+      const form = document.getElementById('contact-form');
+      const banner = document.getElementById('status-banner');
+
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          // Reset validations
+          document.querySelectorAll('.form-feedback').forEach(el => el.style.display = 'none');
+          if (banner) {
+            banner.style.display = 'none';
+            banner.className = 'form-status-alert';
+          }
+
+          // Simple Client-side validation checks
+          let hasError = false;
+          const fullNameVal = document.getElementById('id_full_name').value.trim();
+          const emailVal = document.getElementById('id_email').value.trim();
+          const subjectVal = document.getElementById('id_subject').value.trim();
+          const messageVal = document.getElementById('id_message').value.trim();
+
+          if (!fullNameVal) {
+            document.getElementById('feedback_full_name').style.display = 'block';
+            hasError = true;
+          }
+          if (!emailVal || !emailVal.includes('@')) {
+            document.getElementById('feedback_email').style.display = 'block';
+            hasError = true;
+          }
+          if (!subjectVal) {
+            document.getElementById('feedback_subject').style.display = 'block';
+            hasError = true;
+          }
+          if (!messageVal) {
+            document.getElementById('feedback_message').style.display = 'block';
+            hasError = true;
+          }
+
+          if (hasError) return;
+
+          // Retrieve CSRF token
+          const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+          const csrfToken = csrfInput ? csrfInput.value : '';
+
+          // Build request payload
+          const formData = new FormData();
+          formData.append('full_name', fullNameVal);
+          formData.append('email', emailVal);
+          formData.append('subject', subjectVal);
+          formData.append('message', messageVal);
+
+          // Submit via AJAX
+          fetch('/api/contact/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-CSRFToken': csrfToken
+            }
+          })
+            .then(async response => {
+              const data = await response.json();
+              if (response.ok) {
+                if (banner) {
+                  banner.classList.add('success');
+                  banner.textContent = data.message || 'Thank you! Your inquiry has been submitted.';
+                  banner.style.display = 'block';
+                }
+                form.reset();
+              } else {
+                throw new Error(data.message || 'Validation error occured.');
+              }
+            })
+            .catch(err => {
+              if (banner) {
+                banner.classList.add('error');
+                banner.textContent = err.message || 'Network error, please try again.';
+                banner.style.display = 'block';
+              }
+            });
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

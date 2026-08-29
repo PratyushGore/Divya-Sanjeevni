@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Add New Product | Divya Sanjeevni</title>
+  <meta name="description" content="Add organic skincare, essential oils, and herbal remedy products to the catalog database.">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/css/admin-styles.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       ADMIN PORTAL SHELL LAYOUT
+       ========================================== -->
+  <div class="app-shell">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" aria-label="Admin Navigation Sidebar">
+      <div class="sidebar-header">
+        <a href="/admin-dashboard.html" class="sidebar-logo">
+          <i data-lucide="leaf" style="color: var(--color-accent); width: 24px; height: 24px;"></i>
+          <span>Divya Sanjeevni</span>
+        </a>
+        <span class="admin-badge">Portal</span>
+      </div>
+
+      <!-- Navigation links -->
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/admin-dashboard.html" class="menu-link">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard Overview</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-product.html" class="menu-link active">
+            <i data-lucide="plus-circle"></i>
+            <span>Add Product</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-result.html" class="menu-link">
+            <i data-lucide="microscope"></i>
+            <span>Add Case Study</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-products.html" class="menu-link">
+            <i data-lucide="package"></i>
+            <span>Manage Products</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-results.html" class="menu-link">
+            <i data-lucide="clipboard-list"></i>
+            <span>Manage Results</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-categories.html" class="menu-link">
+            <i data-lucide="tags"></i>
+            <span>Manage Categories</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-contact-enquiries.html" class="menu-link">
+            <i data-lucide="message-square"></i>
+            <span>Contact Enquiries</span>
+            <span class="menu-badge" id="contact-enquiries-badge" style="{% if pending_enquiries_count == 0 %}display: none;{% endif %}">{{ pending_enquiries_count }}</span>
+          </a>
+        </li>
+        <li style="margin-top: auto; padding-top: 1rem;">
+          <a href="/" target="_blank" class="menu-link" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent);">
+            <i data-lucide="external-link"></i>
+            <span>View Live Website</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar footer -->
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div class="admin-info">
+            <h4>Admin User</h4>
+            <p>Superuser</p>
+          </div>
+        </div>
+        <a href="{% url 'admin_logout' %}" class="logout-btn" aria-label="Log out account" style="display: inline-flex; align-items: center; justify-content: center;">
+          <i data-lucide="log-out"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- RIGHT SIDE WORKSPACE -->
+    <main class="main-workspace">
+      
+      <!-- Top header bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" aria-label="Toggle Sidebar Menu" aria-expanded="true">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search products..." aria-label="Search">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="time-indicator">
+            <i data-lucide="calendar"></i>
+            <span>Loading Calendar...</span>
+          </div>
+
+          <div class="header-actions">
+            <button class="header-btn" aria-label="View notifications">
+              <i data-lucide="bell"></i>
+              <span class="header-badge"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Django add-product content block:
+           {% block product_form_content %} -->
+      <div class="content-body">
+        
+        <!-- Header title -->
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Add New Product</h2>
+            <p>Publish an organic remedy item directly to the public catalog database.</p>
+          </div>
+          <a href="/admin-dashboard.html" class="btn btn-outline">
+            <i data-lucide="arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Form Element configured for Django submissions -->
+        <form id="admin-product-form" method="POST" action="/api/products/add/" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          
+          <div class="form-status-alert"></div>
+
+          <div class="form-split-grid">
+            
+            <!-- LEFT MAIN PANEL (Product configuration info) -->
+            <div>
+              
+              <!-- Card 1: Basic details -->
+              <div class="form-card">
+                <h3 class="form-card-title">Basic Information</h3>
+                
+                <!-- Title input -->
+                <div class="form-group">
+                  <label for="product-title" class="form-label">Product Title *</label>
+                  <input type="text" id="product-title" name="title" class="form-control" placeholder="e.g. Active Brightening Facial Serum" required>
+                  <span class="form-feedback"></span>
+                </div>
+
+                <!-- Slug input -->
+                <div class="form-group">
+                  <label for="product-slug" class="form-label">Product Slug (URL-Safe Identifier) *</label>
+                  <input type="text" id="product-slug" name="slug" class="form-control" placeholder="e.g. active-brightening-facial-serum" required>
+                  <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">This string is dynamically generated from the title and forms the public URL path.</p>
+                  <span class="form-feedback"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                  <label for="product-desc" class="form-label">Product Description *</label>
+                  <textarea id="product-desc" name="description" class="form-control" rows="8" placeholder="Outline active biological ingredients, therapy benefits, usage instructions..." required style="resize: vertical;"></textarea>
+                  <span class="form-feedback"></span>
+                </div>
+              </div>
+
+              <!-- Card 2: Inventory & pricing -->
+              <div class="form-card">
+                <h3 class="form-card-title">Pricing &amp; Inventory</h3>
+
+                <div class="form-row-2">
+                  <!-- Regular Price -->
+                  <div class="form-group">
+                    <label for="product-price" class="form-label">Regular Price ($) *</label>
+                    <input type="number" id="product-price" name="regular_price" class="form-control" min="0.01" step="0.01" placeholder="e.g. 29.99" required>
+                    <span class="form-feedback"></span>
+                  </div>
+
+                  <!-- Sale Price -->
+                  <div class="form-group">
+                    <label for="product-sale-price" class="form-label">Sale Price ($)</label>
+                    <input type="number" id="product-sale-price" name="sale_price" class="form-control" min="0.00" step="0.01" placeholder="e.g. 19.99">
+                    <span class="form-feedback"></span>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.25rem;">
+                  <!-- Category -->
+                  <label for="product-category" class="form-label">Product Category *</label>
+                  <select id="product-category" name="category" class="form-control" required style="-webkit-appearance: none; -moz-appearance: none; appearance: none;">
+                    <option value="">Select Category</option>
+                    {% for cat in categories %}
+                      <option value="{{ cat.id }}">{{ cat.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <span class="form-feedback"></span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- RIGHT SIDE PANEL (Media upload & statuses) -->
+            <div>
+              
+              <!-- Card 3: Media Upload -->
+              <div class="form-card">
+                <h3 class="form-card-title">Product Image (Primary)</h3>
+                
+                <div class="form-group">
+                  <!-- Drag-and-drop container wrapper -->
+                  <div class="upload-dropzone" role="button" aria-label="Upload primary product photo file box">
+                    <i data-lucide="cloud-upload" class="upload-icon" style="width: 32px; height: 32px;"></i>
+                    <p>Drag and drop primary file, or <strong>browse</strong></p>
+                    <p style="font-size: 0.75rem;">Supports PNG, JPG, JPEG under 5MB</p>
+                    <input type="file" id="product-image-file" name="image" accept="image/*" style="display: none;">
+                  </div>
+                  <!-- Image thumbnail preview window -->
+                  <div class="preview-container">
+                    <img src="" alt="Thumbnail preview image">
+                    <button class="remove-preview-btn" aria-label="Remove image">&times;</button>
+                  </div>
+                  <span class="form-feedback" style="display: block;"></span>
+                </div>
+              </div>
+
+              <!-- Card 3b: Media Upload 2 -->
+              <div class="form-card">
+                <h3 class="form-card-title">Product Image (Thumbnail 2)</h3>
+                
+                <div class="form-group">
+                  <!-- Drag-and-drop container wrapper -->
+                  <div class="upload-dropzone" role="button" aria-label="Upload second product photo file box">
+                    <i data-lucide="cloud-upload" class="upload-icon" style="width: 32px; height: 32px;"></i>
+                    <p>Drag and drop second file, or <strong>browse</strong></p>
+                    <p style="font-size: 0.75rem;">Supports PNG, JPG, JPEG under 5MB</p>
+                    <input type="file" id="product-image-2-file" name="image_2" accept="image/*" style="display: none;">
+                  </div>
+                  <!-- Image thumbnail preview window -->
+                  <div class="preview-container">
+                    <img src="" alt="Thumbnail preview image">
+                    <button class="remove-preview-btn" aria-label="Remove image">&times;</button>
+                  </div>
+                  <span class="form-feedback" style="display: block;"></span>
+                </div>
+              </div>
+
+              <!-- Card 3c: Media Upload 3 -->
+              <div class="form-card">
+                <h3 class="form-card-title">Product Image (Thumbnail 3)</h3>
+                
+                <div class="form-group">
+                  <!-- Drag-and-drop container wrapper -->
+                  <div class="upload-dropzone" role="button" aria-label="Upload third product photo file box">
+                    <i data-lucide="cloud-upload" class="upload-icon" style="width: 32px; height: 32px;"></i>
+                    <p>Drag and drop third file, or <strong>browse</strong></p>
+                    <p style="font-size: 0.75rem;">Supports PNG, JPG, JPEG under 5MB</p>
+                    <input type="file" id="product-image-3-file" name="image_3" accept="image/*" style="display: none;">
+                  </div>
+                  <!-- Image thumbnail preview window -->
+                  <div class="preview-container">
+                    <img src="" alt="Thumbnail preview image">
+                    <button class="remove-preview-btn" aria-label="Remove image">&times;</button>
+                  </div>
+                  <span class="form-feedback" style="display: block;"></span>
+                </div>
+              </div>
+
+              <!-- Card 4: Status and tags -->
+              <div class="form-card">
+                <h3 class="form-card-title">Visibility &amp; Attributes</h3>
+                
+                <!-- Toggle status switch -->
+                <div class="switch-group">
+                  <div class="switch-label-block">
+                    <h4>Publish Status</h4>
+                    <p>Make this product catalog visible publicly.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="is_published" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--color-border); margin: 1.5rem 0;">
+
+                <div class="form-group">
+                  <label class="form-label" style="margin-bottom: 0.75rem;">Catalog Badges</label>
+                  <div class="checkbox-grid">
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="is_featured" id="is_featured">
+                      <span>⭐ Featured on Home Page</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="is_in_stock" id="is_in_stock" checked>
+                      <span>✅ In Stock</span>
+                    </label>
+                  </div>
+                  <p style="font-size:0.75rem;color:var(--color-text-muted);margin-top:0.5rem;">Checking "Featured" will display this product in the Home Page Featured Catalog (max 4 shown).</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- STICKY BOTTOM SUBMIT ACTIONS BAR -->
+          <div class="sticky-submit-bar">
+            <!-- Draft / publish triggers -->
+            <button type="button" class="btn btn-outline" onclick="alert('Product mockup saved to drafts.');">Save as Draft</button>
+            <button type="submit" class="btn btn-primary">
+              <i data-lucide="check-circle-2" style="width: 18px; height: 18px;"></i>
+              <span>Publish Product</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+      <!-- Django add-product content block end:
+           {% endblock %} -->
+
+    </main>
+
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <!-- Global logic JS -->
+  <script src="/static/js/admin-main.js"></script>
+</body>
+</html>

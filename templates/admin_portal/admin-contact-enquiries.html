@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Contact Enquiries | Divya Sanjeevni</title>
+  <meta name="description" content="Manage customer advice requests, product feedback, and support inquiries.">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/css/admin-styles.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       ADMIN PORTAL SHELL LAYOUT
+       ========================================== -->
+  <div class="app-shell">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" aria-label="Admin Navigation Sidebar">
+      <div class="sidebar-header">
+        <a href="/admin-dashboard.html" class="sidebar-logo">
+          <i data-lucide="leaf" style="color: var(--color-accent); width: 24px; height: 24px;"></i>
+          <span>Divya Sanjeevni</span>
+        </a>
+        <span class="admin-badge">Portal</span>
+      </div>
+
+      <!-- Navigation links -->
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/admin-dashboard.html" class="menu-link">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard Overview</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-product.html" class="menu-link">
+            <i data-lucide="plus-circle"></i>
+            <span>Add Product</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-add-result.html" class="menu-link">
+            <i data-lucide="microscope"></i>
+            <span>Add Case Study</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-products.html" class="menu-link">
+            <i data-lucide="package"></i>
+            <span>Manage Products</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-manage-results.html" class="menu-link">
+            <i data-lucide="clipboard-list"></i>
+            <span>Manage Results</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-categories.html" class="menu-link">
+            <i data-lucide="tags"></i>
+            <span>Manage Categories</span>
+          </a>
+        </li>
+        <li>
+          <a href="/admin-contact-enquiries.html" class="menu-link active">
+            <i data-lucide="message-square"></i>
+            <span>Contact Enquiries</span>
+            <span class="menu-badge" id="contact-enquiries-badge" style="{% if pending_enquiries_count == 0 %}display: none;{% endif %}">{{ pending_enquiries_count }}</span>
+          </a>
+        </li>
+        <li style="margin-top: auto; padding-top: 1rem;">
+          <a href="/" target="_blank" class="menu-link" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent);">
+            <i data-lucide="external-link"></i>
+            <span>View Live Website</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar footer -->
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div class="admin-info">
+            <h4>Admin User</h4>
+            <p>Superuser</p>
+          </div>
+        </div>
+        <a href="{% url 'admin_logout' %}" class="logout-btn" aria-label="Log out account" style="display: inline-flex; align-items: center; justify-content: center;">
+          <i data-lucide="log-out"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- RIGHT SIDE WORKSPACE -->
+    <main class="main-workspace">
+      
+      <!-- Top header bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" aria-label="Toggle Sidebar Menu" aria-expanded="true">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search enquiries..." aria-label="Search" id="enquiry-search-input">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="time-indicator">
+            <i data-lucide="calendar"></i>
+            <span>Loading Calendar...</span>
+          </div>
+
+          <div class="header-actions">
+            <button class="header-btn" aria-label="View notifications">
+              <i data-lucide="bell"></i>
+              <span class="header-badge"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Django enquiries block:
+           {% block enquiries_content %} -->
+      <div class="content-body">
+        
+        <!-- Header title -->
+        <div class="content-header">
+          <div class="content-title">
+            <h2>Customer Contact Enquiries</h2>
+            <p>Review and resolve advice queries and support requests submitted by users.</p>
+          </div>
+        </div>
+
+        <div class="form-status-alert" id="enquiry-status-alert"></div>
+
+        <!-- Main Enquiries Table Card -->
+        <section class="dashboard-card" aria-label="Contact enquiries panel">
+          <div class="card-header-row">
+            <div class="card-title">
+              <h3>All Enquiries</h3>
+            </div>
+            <div class="filter-controls" style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-outline" id="filter-all-btn" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-color: var(--color-accent); color: var(--color-accent); font-weight: 600;">All</button>
+              <button class="btn btn-outline" id="filter-pending-btn" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Pending</button>
+              <button class="btn btn-outline" id="filter-resolved-btn" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Resolved</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Email Address</th>
+                  <th>Subject</th>
+                  <th>Date Submitted</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="enquiries-tbody">
+                {% for enquiry in enquiries %}
+                <tr data-status="{{ enquiry.status }}" data-id="{{ enquiry.id }}">
+                  <td style="font-weight: 600; color: var(--color-sidebar);">{{ enquiry.full_name }}</td>
+                  <td>{{ enquiry.email }}</td>
+                  <td>{{ enquiry.subject }}</td>
+                  <td>{{ enquiry.submitted_at|date:"M d, Y, h:i A" }}</td>
+                  <td>
+                    {% if enquiry.status == "Pending" %}
+                    <span class="status-badge status-pending"><i data-lucide="clock" style="width: 12px; height: 12px;"></i> Pending</span>
+                    {% else %}
+                    <span class="status-badge status-resolved"><i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> Resolved</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="action-row">
+                      <button class="action-icon-btn btn-resolve view-enquiry-btn" title="View Enquiry" data-id="{{ enquiry.id }}"><i data-lucide="eye"></i></button>
+                      <button class="action-icon-btn btn-delete delete-enquiry-btn" title="Delete" data-id="{{ enquiry.id }}"><i data-lucide="trash-2"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 3rem; color: var(--color-text-muted);">
+                    <i data-lucide="message-square" style="width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.3;"></i>
+                    <p>No enquiries found.</p>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+      <!-- Django enquiries block end:
+           {% endblock %} -->
+
+    </main>
+
+  </div>
+
+  <!-- ==========================================
+       MODAL DETAIL VIEW OVERLAY (Requirement 5)
+       ========================================== -->
+  <div class="admin-modal-backdrop" id="enquiry-modal-backdrop">
+    <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      
+      <div class="admin-modal-header">
+        <h3 id="modal-title">Enquiry Details</h3>
+        <button class="admin-modal-close" id="close-modal-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="admin-modal-body">
+        <div class="enquiry-detail-row">
+          <div class="enquiry-detail-label">Customer Name</div>
+          <div class="enquiry-detail-value" id="modal-customer-name" style="font-weight: 600;">Sarah Jenkins</div>
+        </div>
+
+        <div class="enquiry-detail-row" style="display: flex; gap: 2rem;">
+          <div style="flex: 1;">
+            <div class="enquiry-detail-label">Email Address</div>
+            <div class="enquiry-detail-value" id="modal-customer-email">sarah.j@gmail.com</div>
+          </div>
+          <div style="flex: 1;">
+            <div class="enquiry-detail-label">Submitted On</div>
+            <div class="enquiry-detail-value" id="modal-submit-date">Yesterday, 04:32 PM</div>
+          </div>
+        </div>
+
+        <div class="enquiry-detail-row">
+          <div class="enquiry-detail-label">Subject</div>
+          <div class="enquiry-detail-value" id="modal-subject" style="font-weight: 500;">Product Efficacy FAQ</div>
+        </div>
+
+        <div class="enquiry-detail-row">
+          <div class="enquiry-detail-label">Customer Message</div>
+          <div class="enquiry-detail-message" id="modal-message">
+Hello, I wanted to know if the Active Brightening Facial Serum works well with dry, sensitive skin? I often get eczema patches and would like to be sure this is safe. Thank you!
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer">
+        <button class="btn btn-outline" id="modal-close-footer-btn" style="padding: 0.5rem 1.25rem;">Close</button>
+        <button class="btn btn-secondary" id="modal-delete-btn" style="padding: 0.5rem 1.25rem; background-color: var(--color-error);"><i data-lucide="trash-2" style="width: 16px; height: 16px; margin-right: 4px; display: inline-block; vertical-align: middle;"></i> Delete</button>
+        <button class="btn btn-primary" id="modal-resolve-btn" style="padding: 0.5rem 1.25rem;"><i data-lucide="check-circle" style="width: 16px; height: 16px; margin-right: 4px; display: inline-block; vertical-align: middle;"></i> Mark as Resolved</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lucide Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <!-- Global logic JS -->
+  <script src="/static/js/admin-main.js"></script>
+</body>
+</html>
