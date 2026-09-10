@@ -3,7 +3,9 @@
 db.sqlite3
 __pycache__/
 *.pyc
-media/
+media/*
+!media/products/
+!media/results/
 static/assets/
 staticfiles/
 logs/
