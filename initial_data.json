@@ -1,0 +1,106 @@
+[
+{
+  "model": "app.category",
+  "pk": 6,
+  "fields": {
+    "name": "Juice",
+    "slug": "juice",
+    "description": "Drinkable Liquides",
+    "created_at": "2026-08-10T13:21:24.727Z"
+  }
+},
+{
+  "model": "app.category",
+  "pk": 7,
+  "fields": {
+    "name": "Capsules",
+    "slug": "capsules",
+    "description": "",
+    "created_at": "2026-08-10T13:21:51.119Z"
+  }
+},
+{
+  "model": "app.category",
+  "pk": 10,
+  "fields": {
+    "name": "Drops",
+    "slug": "drops",
+    "description": "",
+    "created_at": "2026-08-10T13:23:19.253Z"
+  }
+},
+{
+  "model": "app.category",
+  "pk": 11,
+  "fields": {
+    "name": "Oils",
+    "slug": "oils",
+    "description": "",
+    "created_at": "2026-08-10T13:23:34.351Z"
+  }
+},
+{
+  "model": "app.category",
+  "pk": 12,
+  "fields": {
+    "name": "Personal Hygiene",
+    "slug": "personal-hygiene",
+    "description": "",
+    "created_at": "2026-08-10T13:31:47.681Z"
+  }
+},
+{
+  "model": "app.product",
+  "pk": 12,
+  "fields": {
+    "category": 6,
+    "title": "Riyansh Amrit Juice",
+    "slug": "riyansh-amrit-juice",
+    "description": "Hero Product",
+    "regular_price": "1850.00",
+    "sale_price": "1500.00",
+    "image": "products/1.jpg",
+    "image_2": "products/1.jpg",
+    "image_3": "products/1.jpg",
+    "is_in_stock": true,
+    "is_featured": true,
+    "created_at": "2026-08-10T13:33:58.334Z"
+  }
+},
+{
+  "model": "app.product",
+  "pk": 13,
+  "fields": {
+    "category": 7,
+    "title": "Amrut",
+    "slug": "amrut",
+    "description": "Test",
+    "regular_price": "123.00",
+    "sale_price": null,
+    "image": "products/8.jpg",
+    "image_2": "products/9.jpg",
+    "image_3": "products/10.jpg",
+    "is_in_stock": true,
+    "is_featured": false,
+    "created_at": "2026-08-28T15:30:11.208Z"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$87DQAvs0FClIY8A9BJOJWC$VVFls1jGih2Dn2PLRQMpQHWD6lmTarYcvycVLY/QC9w=",
+    "last_login": "2026-08-28T15:28:09.803Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-07-29T07:18:22.677Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
