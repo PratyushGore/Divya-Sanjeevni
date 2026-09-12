@@ -15,6 +15,9 @@
        ========================================== -->
   <div class="app-shell">
     
+    <!-- Backdrop overlay for mobile sidebar -->
+    <div class="sidebar-backdrop" aria-hidden="true"></div>
+
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar" aria-label="Admin Navigation Sidebar">
       <div class="sidebar-header">
@@ -23,6 +26,9 @@
           <span>Divya Sanjeevni</span>
         </a>
         <span class="admin-badge">Portal</span>
+        <button type="button" class="sidebar-close-btn" aria-label="Close Sidebar Menu">
+          <i data-lucide="x"></i>
+        </button>
       </div>
 
       <!-- Navigation links -->
@@ -136,7 +142,7 @@
 
         <div class="form-status-alert" id="category-status-alert"></div>
 
-        <div class="dashboard-grid-2" style="grid-template-columns: 1fr 2fr; gap: 1.5rem;">
+        <div class="dashboard-grid-2 categories-grid">
           
           <!-- LEFT PANEL: Add Category Form -->
           <div class="form-card" style="padding: 1.5rem; height: fit-content;">

@@ -51,6 +51,9 @@
 
   <div class="app-shell">
 
+    <!-- Backdrop overlay for mobile sidebar -->
+    <div class="sidebar-backdrop" aria-hidden="true"></div>
+
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar" aria-label="Admin Navigation Sidebar">
       <div class="sidebar-header">
@@ -59,6 +62,9 @@
           <span>Divya Sanjeevni</span>
         </a>
         <span class="admin-badge">Portal</span>
+        <button type="button" class="sidebar-close-btn" aria-label="Close Sidebar Menu">
+          <i data-lucide="x"></i>
+        </button>
       </div>
 
       <ul class="sidebar-menu">

@@ -53,14 +53,109 @@ function initSidebarToggle() {
   const toggleBtn = document.querySelector('.sidebar-toggle');
   const sidebar = document.querySelector('.sidebar');
 
-  if (!toggleBtn || !sidebar) return;
+  if (!sidebar) return;
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-    
-    // Accessibility markup update
-    const isCollapsed = sidebar.classList.contains('collapsed');
-    toggleBtn.setAttribute('aria-expanded', !isCollapsed);
+  // Ensure backdrop exists in the DOM for mobile
+  let backdrop = document.querySelector('.sidebar-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'sidebar-backdrop';
+    backdrop.setAttribute('aria-hidden', 'true');
+    const shell = document.querySelector('.app-shell') || document.body;
+    shell.appendChild(backdrop);
+  }
+
+  // Ensure mobile close button exists inside .sidebar-header
+  const sidebarHeader = sidebar.querySelector('.sidebar-header');
+  let closeBtn = sidebar.querySelector('.sidebar-close-btn');
+  if (sidebarHeader && !closeBtn) {
+    closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'sidebar-close-btn';
+    closeBtn.setAttribute('aria-label', 'Close Navigation Sidebar');
+    closeBtn.innerHTML = '<i data-lucide="x"></i>';
+    sidebarHeader.appendChild(closeBtn);
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
+  function isMobile() {
+    return window.innerWidth <= 991;
+  }
+
+  function openMobileSidebar() {
+    sidebar.classList.add('open');
+    sidebar.classList.remove('collapsed');
+    document.body.classList.add('sidebar-open');
+    if (backdrop) backdrop.classList.add('active');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMobileSidebar() {
+    sidebar.classList.remove('open');
+    document.body.classList.remove('sidebar-open');
+    if (backdrop) backdrop.classList.remove('active');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleSidebar() {
+    if (isMobile()) {
+      if (sidebar.classList.contains('open')) {
+        closeMobileSidebar();
+      } else {
+        openMobileSidebar();
+      }
+    } else {
+      sidebar.classList.toggle('collapsed');
+      const isCollapsed = sidebar.classList.contains('collapsed');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSidebar();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeMobileSidebar();
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      closeMobileSidebar();
+    });
+  }
+
+  // Close mobile sidebar on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMobile() && sidebar.classList.contains('open')) {
+      closeMobileSidebar();
+    }
+  });
+
+  // Close mobile sidebar when clicking any menu link
+  sidebar.querySelectorAll('.menu-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (isMobile()) {
+        closeMobileSidebar();
+      }
+    });
+  });
+
+  // Sync state on window resize
+  window.addEventListener('resize', () => {
+    if (!isMobile()) {
+      closeMobileSidebar();
+    } else {
+      sidebar.classList.remove('collapsed');
+    }
   });
 }
 

@@ -15,6 +15,9 @@
        ========================================== -->
   <div class="app-shell">
     
+    <!-- Backdrop overlay for mobile sidebar -->
+    <div class="sidebar-backdrop" aria-hidden="true"></div>
+
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar" aria-label="Admin Navigation Sidebar">
       <div class="sidebar-header">
@@ -23,6 +26,9 @@
           <span>Divya Sanjeevni</span>
         </a>
         <span class="admin-badge">Portal</span>
+        <button type="button" class="sidebar-close-btn" aria-label="Close Sidebar Menu">
+          <i data-lucide="x"></i>
+        </button>
       </div>
 
       <!-- Navigation tabs -->
@@ -202,12 +208,12 @@
 
         </section>
 
-        <!-- Shortcuts Overview Section (Store Conversion Analytics is REMOVED) -->
-        <section style="margin-bottom: 2rem;">
-          <div class="shortcut-buttons" style="display: flex; flex-direction: row; gap: 1.5rem; width: 100%;">
+        <!-- Shortcuts Overview Section -->
+        <section class="shortcuts-section">
+          <div class="shortcut-buttons">
             <!-- Add product -->
-            <a href="/admin-add-product.html" class="shortcut-card" style="flex: 1; display: flex; align-items: center; gap: 1.25rem;">
-              <div class="shortcut-icon" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent); width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+            <a href="/admin-add-product.html" class="shortcut-card">
+              <div class="shortcut-icon icon-accent">
                 <i data-lucide="plus"></i>
               </div>
               <div class="shortcut-info">
@@ -216,8 +222,8 @@
               </div>
             </a>
             <!-- Add Clinical result -->
-            <a href="/admin-add-result.html" class="shortcut-card" style="flex: 1; display: flex; align-items: center; gap: 1.25rem;">
-              <div class="shortcut-icon" style="background-color: rgba(118, 186, 27, 0.1); color: var(--color-accent); width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+            <a href="/admin-add-result.html" class="shortcut-card">
+              <div class="shortcut-icon icon-accent">
                 <i data-lucide="file-plus"></i>
               </div>
               <div class="shortcut-info">
@@ -226,8 +232,8 @@
               </div>
             </a>
             <!-- Manage Enquiries -->
-            <a href="/admin-contact-enquiries.html" class="shortcut-card" style="flex: 1; display: flex; align-items: center; gap: 1.25rem;">
-              <div class="shortcut-icon" style="background-color: rgba(30, 58, 43, 0.1); color: var(--color-sidebar); width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+            <a href="/admin-contact-enquiries.html" class="shortcut-card">
+              <div class="shortcut-icon icon-sidebar">
                 <i data-lucide="message-square"></i>
               </div>
               <div class="shortcut-info">
